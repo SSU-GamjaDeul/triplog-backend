@@ -32,5 +32,5 @@ public class Trip extends BaseEntity {
 
     private LocalDate startDate;
 
-    private LocalDate end_Date;
+    private LocalDate endDate;
 }
