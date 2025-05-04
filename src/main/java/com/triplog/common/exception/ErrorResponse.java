@@ -12,25 +12,19 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ErrorResponse {
 
-    private LocalDateTime time;
     private HttpStatus status;
     private String message;
-    private String requestURI;
 
     @Builder
-    private ErrorResponse(LocalDateTime time, HttpStatus status, String message, String requestURI) {
-        this.time = time;
+    private ErrorResponse(HttpStatus status, String message) {
         this.status = status;
         this.message = message;
-        this.requestURI = requestURI;
     }
 
-    public static ErrorResponse of(ErrorCode errorCode, String requestURI) {
+    public static ErrorResponse of(ErrorCode errorCode) {
         return ErrorResponse.builder()
-                .time(LocalDateTime.now())
                 .status(errorCode.getStatus())
                 .message(errorCode.getMessage())
-                .requestURI(requestURI)
                 .build();
     }
 }

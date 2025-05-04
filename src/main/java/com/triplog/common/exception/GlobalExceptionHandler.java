@@ -21,99 +21,99 @@ public class GlobalExceptionHandler {
 
 	// 500 : Internal Server Error
 	@ExceptionHandler(Exception.class)
-	public ResponseEntity<ErrorResponse> handleServerException(Exception e, HttpServletRequest request) {
+	public ResponseEntity<ErrorResponse> handleServerException(Exception e) {
 		log.warn(e.getMessage(), e);
-		ErrorResponse errorResponse = ErrorResponse.of(ErrorCode.INTERNAL_SERVER_ERROR, request.getRequestURI());
+		ErrorResponse errorResponse = ErrorResponse.of(ErrorCode.INTERNAL_SERVER_ERROR);
 		return ResponseEntity.status(errorResponse.getStatus().value()).body(errorResponse);
 	}
 
 	// 404 : Not Found
 	@ExceptionHandler(NoResourceFoundException.class)
 	protected ResponseEntity<ErrorResponse> handleNoResourceFoundExceptionException(
-		NoResourceFoundException e, HttpServletRequest request) {
+		NoResourceFoundException e) {
 		log.error(e.getMessage(), e);
-		ErrorResponse errorResponse = ErrorResponse.of(ErrorCode.NOT_FOUND, request.getRequestURI());
+		ErrorResponse errorResponse = ErrorResponse.of(ErrorCode.NOT_FOUND);
 		return ResponseEntity.status(errorResponse.getStatus().value()).body(errorResponse);
 	}
 
 	// 405 : Method Not Allowed
 	@ExceptionHandler(HttpRequestMethodNotSupportedException.class)
 	protected ResponseEntity<ErrorResponse> handleHttpRequestMethodNotSupportedException(
-		HttpRequestMethodNotSupportedException e, HttpServletRequest request) {
+		HttpRequestMethodNotSupportedException e) {
 		log.error(e.getMessage(), e);
-		ErrorResponse errorResponse = ErrorResponse.of(ErrorCode.METHOD_NOT_ALLOWED, request.getRequestURI());
+		ErrorResponse errorResponse = ErrorResponse.of(ErrorCode.METHOD_NOT_ALLOWED);
 		return ResponseEntity.status(errorResponse.getStatus().value()).body(errorResponse);
 	}
 
 	// 400 : MethodArgumentNotValidException
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(
-		MethodArgumentNotValidException e, HttpServletRequest request) {
+		MethodArgumentNotValidException e) {
 		log.warn(e.getMessage(), e);
-		ErrorResponse errorResponse = ErrorResponse.of(ErrorCode.INVALID_INPUT_VALUE, request.getRequestURI());
+		ErrorResponse errorResponse = ErrorResponse.of(ErrorCode.INVALID_INPUT_VALUE);
 		return ResponseEntity.status(errorResponse.getStatus().value()).body(errorResponse);
 	}
 
 	// 400 : MethodArgumentType
 	@ExceptionHandler(value = MethodArgumentTypeMismatchException.class)
 	public ResponseEntity<ErrorResponse> handleMethodArgumentTypeMismatchException(
-		MethodArgumentTypeMismatchException e, HttpServletRequest request) {
+		MethodArgumentTypeMismatchException e) {
 		log.error(e.getMessage(), e);
-		ErrorResponse errorResponse = ErrorResponse.of(ErrorCode.INVALID_TYPE_VALUE, request.getRequestURI());
+		ErrorResponse errorResponse = ErrorResponse.of(ErrorCode.INVALID_TYPE_VALUE);
 		return ResponseEntity.status(errorResponse.getStatus().value()).body(errorResponse);
 	}
 
 	// 400 : Bad Request, ModelAttribute
 	@ExceptionHandler(BindException.class)
-	public ResponseEntity<ErrorResponse> handleBindException(BindException e, HttpServletRequest request) {
+	public ResponseEntity<ErrorResponse> handleBindException(BindException e) {
 		log.warn(e.getMessage(), e);
-		ErrorResponse errorResponse = ErrorResponse.of(ErrorCode.INVALID_INPUT_VALUE, request.getRequestURI());
+		ErrorResponse errorResponse = ErrorResponse.of(ErrorCode.INVALID_INPUT_VALUE);
 		return ResponseEntity.status(errorResponse.getStatus().value()).body(errorResponse);
 	}
 
 	@ExceptionHandler(HttpMessageNotReadableException.class)
 	public ResponseEntity<ErrorResponse> handleHttpMessageNotReadableException(
-		HttpMessageNotReadableException e, HttpServletRequest request) {
+		HttpMessageNotReadableException e) {
 		log.warn(e.getMessage(), e);
-		ErrorResponse errorResponse = ErrorResponse.of(ErrorCode.INVALID_INPUT_VALUE, request.getRequestURI());
+		ErrorResponse errorResponse = ErrorResponse.of(ErrorCode.INVALID_INPUT_VALUE);
 		return ResponseEntity.status(errorResponse.getStatus().value()).body(errorResponse);
 	}
 
 	@ExceptionHandler(IllegalArgumentException.class)
-	public ResponseEntity<ErrorResponse> handleIllegalArgumentException(IllegalArgumentException e, HttpServletRequest request) {
+	public ResponseEntity<ErrorResponse> handleIllegalArgumentException(IllegalArgumentException e) {
 		log.warn(e.getMessage(), e);
-		ErrorResponse errorResponse = ErrorResponse.of(ErrorCode.INVALID_INPUT_VALUE, request.getRequestURI());
+		ErrorResponse errorResponse = ErrorResponse.of(ErrorCode.INVALID_INPUT_VALUE);
 		return ResponseEntity.status(errorResponse.getStatus().value()).body(errorResponse);
 	}
 
 	@ExceptionHandler(NoHandlerFoundException.class)
-	public ResponseEntity<ErrorResponse> handleNoHandlerFoundException(NoHandlerFoundException e, HttpServletRequest request) {
+	public ResponseEntity<ErrorResponse> handleNoHandlerFoundException(NoHandlerFoundException e) {
 		log.warn(e.getMessage(), e);
-		ErrorResponse errorResponse = ErrorResponse.of(ErrorCode.NOT_FOUND, request.getRequestURI());
+		ErrorResponse errorResponse = ErrorResponse.of(ErrorCode.NOT_FOUND);
 		return ResponseEntity.status(errorResponse.getStatus().value()).body(errorResponse);
 	}
 
 	@ExceptionHandler(MissingServletRequestParameterException.class)
 	public ResponseEntity<ErrorResponse> handleMissingServletRequestParameterException(
-		MissingServletRequestParameterException e, HttpServletRequest request) {
+		MissingServletRequestParameterException e) {
 		log.warn(e.getMessage(), e);
-		ErrorResponse errorResponse = ErrorResponse.of(ErrorCode.MISSING_REQUEST_PARAMETER, request.getRequestURI());
+		ErrorResponse errorResponse = ErrorResponse.of(ErrorCode.MISSING_REQUEST_PARAMETER);
 		return ResponseEntity.status(errorResponse.getStatus().value()).body(errorResponse);
 	}
 
 	// 유효성 검사 에러
 	@ExceptionHandler(HandlerMethodValidationException.class)
-	public ResponseEntity<Object> handleHandlerMethodValidationException(HandlerMethodValidationException e, HttpServletRequest request) {
+	public ResponseEntity<Object> handleHandlerMethodValidationException(HandlerMethodValidationException e) {
 		log.warn(e.getMessage(), e);
-		ErrorResponse errorResponse = ErrorResponse.of(ErrorCode.INVALID_INPUT_VALUE, request.getRequestURI());
+		ErrorResponse errorResponse = ErrorResponse.of(ErrorCode.INVALID_INPUT_VALUE);
 		return ResponseEntity.status(errorResponse.getStatus().value()).body(errorResponse);
 	}
 
 	// Custom Exception
 	@ExceptionHandler(CustomException.class)
-	public ResponseEntity<ErrorResponse> handleCustomException(CustomException e, HttpServletRequest request) {
+	public ResponseEntity<ErrorResponse> handleCustomException(CustomException e) {
 		log.warn(e.getMessage(), e);
-		ErrorResponse errorResponse = ErrorResponse.of(e.getErrorCode(), request.getRequestURI());
+		ErrorResponse errorResponse = ErrorResponse.of(e.getErrorCode());
 		return ResponseEntity.status(errorResponse.getStatus().value()).body(errorResponse);
 	}
 }
