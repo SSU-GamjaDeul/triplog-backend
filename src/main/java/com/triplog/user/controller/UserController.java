@@ -2,20 +2,22 @@ package com.triplog.user.controller;
 
 import com.triplog.user.dto.LoginRequestDto;
 import com.triplog.user.dto.SignupRequestDto;
+import com.triplog.user.dto.UpdateProfileRequestDto;
 import com.triplog.user.jwt.JwtToken;
+import com.triplog.user.jwt.JwtUtil;
 import com.triplog.user.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
 public class UserController {
     private final UserService userService;
+    private final JwtUtil jwtUtil;
 
     @PostMapping("/signup")
     public ResponseEntity<String> signup(@RequestBody SignupRequestDto request) {
@@ -27,5 +29,14 @@ public class UserController {
     public ResponseEntity<JwtToken> login(@RequestBody LoginRequestDto request) {
         String token = userService.login(request);
         return ResponseEntity.ok(JwtToken.builder().accessToken(token).build());
+    }
+
+    @PutMapping("/users")
+    public ResponseEntity<String> updateProfile(HttpServletRequest request, @RequestBody UpdateProfileRequestDto dto) {
+        String token=jwtUtil.resolveToken(request);
+        String nickname=jwtUtil.extractNickName(token);
+        userService.updateProfile(nickname,dto);
+        return ResponseEntity.ok("회원 정보가 수정되었습니다.");
+
     }
 }
