@@ -1,5 +1,7 @@
 package com.triplog.user.service;
 
+import com.triplog.common.exception.CustomException;
+import com.triplog.common.exception.ErrorCode;
 import com.triplog.user.domain.User;
 import com.triplog.user.domain.UserVibe;
 import com.triplog.user.domain.enums.Vibe;
@@ -22,10 +24,9 @@ public class UserService {
 
     // 회원가입
     public boolean register(SignupRequestDto signupRequestDto) {
-
-        Optional<User> existingUser = userRepository.findByNickname(signupRequestDto.getNickname());
-        if (existingUser.isPresent()) {
-            return false;
+        //이미 등록된 닉네임인 경우 에러처리
+        if(userRepository.existsByNickname(signupRequestDto.getNickname())) {
+            throw new CustomException(ErrorCode.USER_NOT_FOUND);
         }
 
         //User 저장
@@ -50,13 +51,12 @@ public class UserService {
     }
 
     public String login(LoginRequestDto loginRequestDto) {
-        Optional<User> user = userRepository.findByNickname(loginRequestDto.getNickname());
-
-        if(user.isPresent()){
-            String accessToken=jwtUtil.createAccessToken(loginRequestDto);
-            return accessToken;
+        //등록되지 않은 user인 경우 에러 처리
+        if(!userRepository.existsByNickname(loginRequestDto.getNickname())) {
+            throw new CustomException(ErrorCode.USER_NOT_FOUND);
         }
-        return null;
+        String accessToken=jwtUtil.createAccessToken(loginRequestDto);
+        return accessToken;
     }
 
 }

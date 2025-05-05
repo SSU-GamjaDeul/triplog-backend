@@ -19,20 +19,13 @@ public class UserController {
 
     @PostMapping("/signup")
     public ResponseEntity<String> signup(@RequestBody SignupRequestDto request) {
-        if(userService.register(request)){
-            return ResponseEntity.ok("회원가입 성공");
-        }else{
-            return ResponseEntity.badRequest().body("이미 존재하는 닉네임 입니다.");
-        }
+        userService.register(request);
+        return ResponseEntity.ok("회원가입 성공");
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequestDto request) {
+    public ResponseEntity<JwtToken> login(@RequestBody LoginRequestDto request) {
         String token = userService.login(request);
-        if (token != null) {
-            return ResponseEntity.ok(JwtToken.builder().accessToken(token).build());
-        } else {
-            return ResponseEntity.badRequest().body("로그인이 실패하였습니다.");
-        }
+        return ResponseEntity.ok(JwtToken.builder().accessToken(token).build());
     }
 }
