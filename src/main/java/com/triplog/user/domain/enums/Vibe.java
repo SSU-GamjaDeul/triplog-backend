@@ -25,4 +25,14 @@ public enum Vibe {
     NONE("해당없음");
 
     private final String description;
+
+    // 한글 설명으로 enum 찾기
+    public static Vibe fromDescription(String description) {
+        for (Vibe vibe : values()) {
+            if (vibe.description.equals(description)) {
+                return vibe;
+            }
+        }
+        throw new IllegalArgumentException("존재하지 않는 Vibe 설명입니다: " + description);
+    }
 }
