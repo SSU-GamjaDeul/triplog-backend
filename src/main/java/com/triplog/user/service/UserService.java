@@ -86,4 +86,8 @@ public class UserService {
             }
         }
     }
+
+    public void checkNickname(String nickname) {
+        if(userRepository.findByNickname(nickname).isPresent()) throw new CustomException(ErrorCode.DUPLICATE_USER);
+    }
 }
