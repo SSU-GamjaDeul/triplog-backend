@@ -3,6 +3,7 @@ package com.triplog.user.controller;
 import com.triplog.user.dto.LoginRequestDto;
 import com.triplog.user.dto.SignupRequestDto;
 import com.triplog.user.dto.UpdateProfileRequestDto;
+import com.triplog.user.jwt.CustomUserDetails;
 import com.triplog.user.jwt.JwtToken;
 import com.triplog.user.jwt.JwtUtil;
 import com.triplog.user.service.UserService;
@@ -32,9 +33,8 @@ public class UserController {
     }
 
     @PutMapping("/users")
-    public ResponseEntity<String> updateProfile(HttpServletRequest request, @RequestBody UpdateProfileRequestDto dto) {
-        String token=jwtUtil.resolveToken(request);
-        String nickname=jwtUtil.extractNickName(token);
+    public ResponseEntity<String> updateProfile(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody UpdateProfileRequestDto dto) {
+        String nickname = userDetails.getUsername();
         userService.updateProfile(nickname,dto);
         return ResponseEntity.ok("회원 정보가 수정되었습니다.");
 
