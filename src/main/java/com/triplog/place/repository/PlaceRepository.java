@@ -1,4 +1,4 @@
-package com.triplog.place;
+package com.triplog.place.repository;
 
 import com.triplog.place.domain.Place;
 import org.springframework.data.jpa.repository.JpaRepository;

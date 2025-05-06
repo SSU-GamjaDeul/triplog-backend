@@ -1,12 +1,14 @@
-package com.triplog.Bookmark;
+package com.triplog.Bookmark.service;
 
 import com.triplog.Bookmark.domain.Bookmark;
 import com.triplog.Bookmark.dto.BookmarkDeleteRequest;
 import com.triplog.Bookmark.dto.BookmarkSaveRequest;
+import com.triplog.Bookmark.repository.BookmarkRepository;
 import com.triplog.common.exception.CustomException;
 import com.triplog.common.exception.ErrorCode;
-import com.triplog.place.PlaceRepository;
+import com.triplog.place.PlaceFinder;
 import com.triplog.place.domain.Place;
+import com.triplog.user.UserFinder;
 import com.triplog.user.domain.User;
 import com.triplog.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,17 +23,14 @@ import org.springframework.transaction.annotation.Transactional;
 public class BookmarkService {
 
     private final BookmarkRepository bookmarkRepository;
-    private final PlaceRepository placeRepository;
-    private final UserRepository userRepository;
+    private final PlaceFinder placeFinder;
+    private final UserFinder userFinder;
 
     @Transactional
     public void save(String nickname, BookmarkSaveRequest request) {
 
-        User user = userRepository.findByNickname(nickname)
-                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-
-        Place place = placeRepository.findByKakaoPlaceId(request.kakaoPlaceId())
-                .orElseThrow(() -> new CustomException(ErrorCode.PLACE_NOT_FOUND));
+        User user = userFinder.findByNickname(nickname);
+        Place place = placeFinder.findByKakaoPlaceId(request.kakaoPlaceId());
 
         if(bookmarkRepository.existsByUserAndPlace(user, place)) {
             throw new CustomException(ErrorCode.BOOKMARK_ALREADY_EXISTS);
@@ -48,11 +47,8 @@ public class BookmarkService {
     @Transactional
     public void delete(String nickname, BookmarkDeleteRequest request) {
 
-        User user = userRepository.findByNickname(nickname)
-                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-
-        Place place = placeRepository.findByKakaoPlaceId(request.kakaoPlaceId())
-                .orElseThrow(() -> new CustomException(ErrorCode.PLACE_NOT_FOUND));
+        User user = userFinder.findByNickname(nickname);
+        Place place = placeFinder.findByKakaoPlaceId(request.kakaoPlaceId());
 
         Bookmark bookmark = bookmarkRepository.findByUserAndPlace(user, place)
                 .orElseThrow(() -> new CustomException(ErrorCode.BOOKMARK_NOT_FOUND));

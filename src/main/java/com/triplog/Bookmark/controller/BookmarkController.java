@@ -1,10 +1,8 @@
-package com.triplog.Bookmark;
+package com.triplog.Bookmark.controller;
 
+import com.triplog.Bookmark.service.BookmarkService;
 import com.triplog.Bookmark.dto.BookmarkDeleteRequest;
 import com.triplog.Bookmark.dto.BookmarkSaveRequest;
-import com.triplog.place.PlaceService;
-import com.triplog.place.dto.PlaceSaveRequest;
-import com.triplog.place.dto.PlaceSaveResponse;
 import com.triplog.user.jwt.CustomUserDetails;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

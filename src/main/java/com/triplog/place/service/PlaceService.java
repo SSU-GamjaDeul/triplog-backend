@@ -1,7 +1,8 @@
-package com.triplog.place;
+package com.triplog.place.service;
 
 import com.triplog.common.exception.CustomException;
 import com.triplog.common.exception.ErrorCode;
+import com.triplog.place.repository.PlaceRepository;
 import com.triplog.place.domain.Place;
 import com.triplog.place.dto.PlaceSaveRequest;
 import com.triplog.place.dto.PlaceSaveResponse;
