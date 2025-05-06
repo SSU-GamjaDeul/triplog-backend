@@ -23,6 +23,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
     private final UserRepository userRepository;
+    private final CustomUserDetailService customUserDetailService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
@@ -45,10 +46,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         String nickName = jwtUtil.extractNickName(token);
 
         if (nickName != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = User.withUsername(nickName)
-                    .password("")
-                    .roles("USER")
-                    .build();
+            UserDetails userDetails = customUserDetailService.loadUserByUsername(nickName);
 
             UsernamePasswordAuthenticationToken authentication =
                     new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
