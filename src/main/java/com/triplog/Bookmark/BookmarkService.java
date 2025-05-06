@@ -33,6 +33,10 @@ public class BookmarkService {
         Place place = placeRepository.findByKakaoPlaceId(request.kakaoPlaceId())
                 .orElseThrow(() -> new CustomException(ErrorCode.PLACE_NOT_FOUND));
 
+        if(bookmarkRepository.existsByUserAndPlace(user, place)) {
+            throw new CustomException(ErrorCode.BOOKMARK_ALREADY_EXISTS);
+        }
+
         Bookmark bookmark = Bookmark.builder()
                 .user(user)
                 .place(place)

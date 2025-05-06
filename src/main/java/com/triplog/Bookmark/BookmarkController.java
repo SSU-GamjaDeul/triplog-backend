@@ -32,7 +32,7 @@ public class BookmarkController {
         String nickname = userDetails.getUsername();
         bookmarkService.save(nickname, request);
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping
@@ -42,6 +42,6 @@ public class BookmarkController {
         String nickname = userDetails.getUsername();
         bookmarkService.delete(nickname, request);
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 }
