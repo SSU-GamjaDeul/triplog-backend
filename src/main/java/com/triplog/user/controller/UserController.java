@@ -32,11 +32,18 @@ public class UserController {
         return ResponseEntity.ok(JwtToken.builder().accessToken(token).build());
     }
 
-    @PutMapping("/users")
+    @PatchMapping("/users")
     public ResponseEntity<String> updateProfile(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody UpdateProfileRequestDto dto) {
         String nickname = userDetails.getUsername();
         userService.updateProfile(nickname,dto);
         return ResponseEntity.ok("회원 정보가 수정되었습니다.");
 
     }
+
+    @GetMapping("/check-nickname")
+    public ResponseEntity<?> checkNickname(@RequestParam String nickname) {
+        userService.checkNickname(nickname);
+        return ResponseEntity.ok("사용가능한 닉네임입니다.");
+    }
+
 }
