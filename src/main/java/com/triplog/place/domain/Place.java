@@ -36,5 +36,5 @@ public class Place extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Category category;
 
-    private Long kakaoMapId;
+    private Long kakaoPlaceId;
 }

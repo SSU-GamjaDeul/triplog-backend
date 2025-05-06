@@ -24,8 +24,12 @@ public enum ErrorCode {
 
 	// Record
 
+	// Bookmark
+	BOOKMARK_NOT_FOUND(HttpStatus.NOT_FOUND, "북마크 정보를 찾을 수 없습니다."),
+
 	// Place
 	PLACE_ALREADY_EXISTS(HttpStatus.CONFLICT, "이미 존재하는 장소 정보입니다."),
+	PLACE_NOT_FOUND(HttpStatus.NOT_FOUND, "DB 내에서 해당 장소 정보를 찾을 수 없습니다."),
 
 	// JWT
 	TOKEN_INVALID(HttpStatus.UNAUTHORIZED, "유효하지 않은 토큰입니다."),

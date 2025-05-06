@@ -1,6 +1,7 @@
-package com.triplog.place.domain;
+package com.triplog.Bookmark.domain;
 
 import com.triplog.common.domain.BaseEntity;
+import com.triplog.place.domain.Place;
 import com.triplog.user.domain.User;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -20,7 +21,7 @@ import lombok.NoArgsConstructor;
 @Builder(toBuilder = true)
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class BookMark extends BaseEntity {
+public class Bookmark extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
