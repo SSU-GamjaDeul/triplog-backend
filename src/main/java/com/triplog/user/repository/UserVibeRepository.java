@@ -10,4 +10,5 @@ import java.util.List;
 @Repository
 public interface UserVibeRepository extends JpaRepository<UserVibe,Long> {
     List<UserVibe> findByUser(User user);
+    void deleteAllByUser(User user);
 }
