@@ -1,6 +1,7 @@
 package com.triplog.Bookmark;
 
 import com.triplog.Bookmark.domain.Bookmark;
+import com.triplog.Bookmark.dto.BookmarkDeleteRequest;
 import com.triplog.Bookmark.dto.BookmarkSaveRequest;
 import com.triplog.common.exception.CustomException;
 import com.triplog.common.exception.ErrorCode;
@@ -38,5 +39,20 @@ public class BookmarkService {
                 .build();
 
         bookmarkRepository.save(bookmark);
+    }
+
+    @Transactional
+    public void delete(String nickname, BookmarkDeleteRequest request) {
+
+        User user = userRepository.findByNickname(nickname)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+
+        Place place = placeRepository.findByKakaoPlaceId(request.kakaoPlaceId())
+                .orElseThrow(() -> new CustomException(ErrorCode.PLACE_NOT_FOUND));
+
+        Bookmark bookmark = bookmarkRepository.findByUserAndPlace(user, place)
+                .orElseThrow(() -> new CustomException(ErrorCode.BOOKMARK_NOT_FOUND));
+
+        bookmarkRepository.delete(bookmark);
     }
 }
