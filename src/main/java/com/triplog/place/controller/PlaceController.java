@@ -2,6 +2,7 @@ package com.triplog.place.controller;
 import com.triplog.place.service.PlaceService;
 import com.triplog.place.dto.PlaceSaveRequest;
 import com.triplog.place.dto.PlaceSaveResponse;
+import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/places")
 @RequiredArgsConstructor
 @Slf4j
+@Hidden
 public class PlaceController {
 
     private final PlaceService placeService;
