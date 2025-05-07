@@ -7,6 +7,7 @@ import com.triplog.user.jwt.CustomUserDetails;
 import com.triplog.user.jwt.JwtToken;
 import com.triplog.user.jwt.JwtUtil;
 import com.triplog.user.service.UserService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
+@Tag(name = "User", description = "User 관련 API입니다.")
 public class UserController {
     private final UserService userService;
     private final JwtUtil jwtUtil;

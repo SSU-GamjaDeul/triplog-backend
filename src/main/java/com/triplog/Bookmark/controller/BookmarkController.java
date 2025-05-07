@@ -4,6 +4,8 @@ import com.triplog.Bookmark.service.BookmarkService;
 import com.triplog.Bookmark.dto.BookmarkDeleteRequest;
 import com.triplog.Bookmark.dto.BookmarkSaveRequest;
 import com.triplog.user.jwt.CustomUserDetails;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,11 +21,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/bookmarks")
 @RequiredArgsConstructor
 @Slf4j
+@Tag(name = "Bookmark", description = "Bookmark 관련 API입니다.")
 public class BookmarkController {
 
     private final BookmarkService bookmarkService;
 
     @PostMapping
+    @Operation(summary = "북마크 생성", description = "카카오 장소 id를 기반으로 해당 장소에 대한 북마크를 생성합니다.")
     public ResponseEntity<Void> create(@AuthenticationPrincipal CustomUserDetails userDetails,
                                        @RequestBody @Valid BookmarkSaveRequest request) {
 
@@ -34,6 +38,7 @@ public class BookmarkController {
     }
 
     @DeleteMapping
+    @Operation(summary = "북마크 삭제", description = "카카오 장소 id를 기반으로 해당 장소에 대한 북마크를 삭제합니다.")
     public ResponseEntity<Void> delete(@AuthenticationPrincipal CustomUserDetails userDetails,
                                        @RequestBody @Valid BookmarkDeleteRequest request) {
 
