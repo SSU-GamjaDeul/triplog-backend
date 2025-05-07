@@ -31,10 +31,7 @@ public class RecordService {
 
         List<RecordFindAllByPlaceResponse.Item> responseList = records.stream()
                 .map(record -> {
-                    List<String> tags = recordTagRepository.findAllByRecord(record).stream()
-                            .map(RecordTag::getContent)
-                            .toList();
-
+                    List<RecordTag> tags = recordTagRepository.findAllByRecord(record);
                     return RecordFindAllByPlaceResponse.Item.from(record, tags);
                 })
                 .toList();
