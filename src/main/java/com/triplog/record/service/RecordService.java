@@ -5,7 +5,6 @@ import com.triplog.place.domain.Place;
 import com.triplog.record.domain.Record;
 import com.triplog.record.domain.RecordTag;
 import com.triplog.record.dto.RecordFindAllByPlaceResponse;
-import com.triplog.record.dto.RecordFindByPlaceResponse;
 import com.triplog.record.repository.RecordRepository;
 import com.triplog.record.repository.RecordTagRepository;
 import lombok.RequiredArgsConstructor;
@@ -30,13 +29,13 @@ public class RecordService {
         Place place = placeFinder.findByKakaoPlaceId(kakaoPlaceId);
         List<Record> records = recordRepository.findAllByPlaceAndIsPublicTrue(place);
 
-        List<RecordFindByPlaceResponse> responseList = records.stream()
+        List<RecordFindAllByPlaceResponse.Item> responseList = records.stream()
                 .map(record -> {
                     List<String> tags = recordTagRepository.findAllByRecord(record).stream()
                             .map(RecordTag::getContent)
                             .toList();
 
-                    return RecordFindByPlaceResponse.from(record, tags);
+                    return RecordFindAllByPlaceResponse.Item.from(record, tags);
                 })
                 .toList();
 
