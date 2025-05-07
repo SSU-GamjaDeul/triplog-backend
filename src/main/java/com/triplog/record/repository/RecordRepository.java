@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface RecordRepository extends JpaRepository<Record, Long> {
 
-    List<Record> findAllByPlaceAndIsPublicTrueOrderByDateAsc(Place place);
+    List<Record> findAllByPlaceAndIsPublicTrueOrderByDateDesc(Place place);
 }

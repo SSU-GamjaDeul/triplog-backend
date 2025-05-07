@@ -1,7 +1,6 @@
 package com.triplog.record.domain;
 
 import com.triplog.common.domain.BaseEntity;
-import com.triplog.user.domain.User;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;

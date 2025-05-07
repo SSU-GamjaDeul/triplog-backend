@@ -12,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Comparator;
 import java.util.List;
 
 @Slf4j
@@ -28,7 +27,7 @@ public class RecordService {
     public RecordFindAllByPlaceResponse getRecordsByPlace(Long kakaoPlaceId) {
 
         Place place = placeFinder.findByKakaoPlaceId(kakaoPlaceId);
-        List<Record> records = recordRepository.findAllByPlaceAndIsPublicTrueOrderByDateAsc(place);
+        List<Record> records = recordRepository.findAllByPlaceAndIsPublicTrueOrderByDateDesc(place);
 
         List<RecordFindAllByPlaceResponse.Item> responseList = records.stream()
                 .map(record -> {
