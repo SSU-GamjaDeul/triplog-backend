@@ -36,7 +36,7 @@ public class Record extends BaseEntity {
     @JoinColumn(name = "trip_id")
     private Trip trip;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "place_id")
     private Place place;
 
