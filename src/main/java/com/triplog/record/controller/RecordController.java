@@ -1,16 +1,16 @@
 package com.triplog.record.controller;
 
+import com.triplog.record.dto.RecordCreateDto;
 import com.triplog.record.dto.RecordFindAllByPlaceResponse;
 import com.triplog.record.service.RecordService;
+import com.triplog.user.jwt.CustomUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/records")
@@ -28,5 +28,13 @@ public class RecordController {
         RecordFindAllByPlaceResponse response = recordService.getRecordsByPlace(kakaoPlaceId);
 
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/trips/{trip_id}")
+    @Operation(summary = "기록 생성", description = "여행의 기록을 생성합니다.")
+    public ResponseEntity<?> createRecord(@AuthenticationPrincipal CustomUserDetails userDetails, @PathVariable Long trip_id, @RequestBody RecordCreateDto recordCreateDto) {
+        String nickname=userDetails.getUsername();
+        recordService.createRecord(nickname,trip_id,recordCreateDto);
+        return ResponseEntity.ok("기록이 생성되었습니다.");
     }
 }
