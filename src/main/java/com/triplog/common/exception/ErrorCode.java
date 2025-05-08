@@ -21,6 +21,7 @@ public enum ErrorCode {
 	DUPLICATE_USER(HttpStatus.CONFLICT,"존재하는 닉네임 입니다."),
 
 	// Trip
+	TRIP_NOT_FOUND(HttpStatus.NOT_FOUND, "여행 정보를 찾을 수 없습니다."),
 
 	// Record
 
