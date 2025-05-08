@@ -1,8 +1,8 @@
-package com.triplog.Bookmark.controller;
+package com.triplog.bookmark.controller;
 
-import com.triplog.Bookmark.service.BookmarkService;
-import com.triplog.Bookmark.dto.BookmarkDeleteRequest;
-import com.triplog.Bookmark.dto.BookmarkSaveRequest;
+import com.triplog.bookmark.service.BookmarkService;
+import com.triplog.bookmark.dto.BookmarkDeleteRequest;
+import com.triplog.bookmark.dto.BookmarkSaveRequest;
 import com.triplog.user.jwt.CustomUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

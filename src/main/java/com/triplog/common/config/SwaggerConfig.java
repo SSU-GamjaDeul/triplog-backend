@@ -25,8 +25,8 @@ public class SwaggerConfig {
 
         return new OpenAPI()
                 .info(new Info()
-                        .title("weve API")
-                        .description("weve API입니다.")
+                        .title("Trip Log API")
+                        .description("Trip Log API입니다.")
                         .version("1.0.0"))
                 .components(new Components().addSecuritySchemes("bearerAuth", securityScheme))
                 .addSecurityItem(securityRequirement);

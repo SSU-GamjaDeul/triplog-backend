@@ -1,6 +1,6 @@
-package com.triplog.Bookmark.repository;
+package com.triplog.bookmark.repository;
 
-import com.triplog.Bookmark.domain.Bookmark;
+import com.triplog.bookmark.domain.Bookmark;
 import com.triplog.place.domain.Place;
 import com.triplog.user.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;

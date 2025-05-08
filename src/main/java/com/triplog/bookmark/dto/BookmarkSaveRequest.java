@@ -1,4 +1,4 @@
-package com.triplog.Bookmark.dto;
+package com.triplog.bookmark.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 

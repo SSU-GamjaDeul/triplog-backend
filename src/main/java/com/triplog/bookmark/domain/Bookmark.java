@@ -1,4 +1,4 @@
-package com.triplog.Bookmark.domain;
+package com.triplog.bookmark.domain;
 
 import com.triplog.common.domain.BaseEntity;
 import com.triplog.place.domain.Place;

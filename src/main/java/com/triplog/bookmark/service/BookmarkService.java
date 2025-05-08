@@ -1,16 +1,15 @@
-package com.triplog.Bookmark.service;
+package com.triplog.bookmark.service;
 
-import com.triplog.Bookmark.domain.Bookmark;
-import com.triplog.Bookmark.dto.BookmarkDeleteRequest;
-import com.triplog.Bookmark.dto.BookmarkSaveRequest;
-import com.triplog.Bookmark.repository.BookmarkRepository;
+import com.triplog.bookmark.domain.Bookmark;
+import com.triplog.bookmark.dto.BookmarkDeleteRequest;
+import com.triplog.bookmark.dto.BookmarkSaveRequest;
+import com.triplog.bookmark.repository.BookmarkRepository;
 import com.triplog.common.exception.CustomException;
 import com.triplog.common.exception.ErrorCode;
 import com.triplog.place.PlaceFinder;
 import com.triplog.place.domain.Place;
 import com.triplog.user.UserFinder;
 import com.triplog.user.domain.User;
-import com.triplog.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
