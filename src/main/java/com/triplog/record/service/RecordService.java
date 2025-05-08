@@ -2,10 +2,12 @@ package com.triplog.record.service;
 
 import com.triplog.place.PlaceFinder;
 import com.triplog.place.domain.Place;
+import com.triplog.record.RecordFinder;
 import com.triplog.record.domain.Record;
 import com.triplog.record.domain.RecordTag;
 import com.triplog.record.dto.RecordCreateDto;
 import com.triplog.record.dto.RecordFindAllByPlaceResponse;
+import com.triplog.record.dto.RecordUpdateDto;
 import com.triplog.record.repository.RecordRepository;
 import com.triplog.record.repository.RecordTagRepository;
 import com.triplog.trip.TripFinder;
@@ -30,6 +32,8 @@ public class RecordService {
     private final PlaceFinder placeFinder;
     private final UserFinder userFinder;
     private final TripFinder tripFinder;
+    private final RecordFinder recordFinder;
+
 
     public RecordFindAllByPlaceResponse getRecordsByPlace(Long kakaoPlaceId) {
 
@@ -62,5 +66,18 @@ public class RecordService {
                 .isPublic(recordCreateDto.is_public())
                 .build();
         recordRepository.save(record);
+    }
+
+    @Transactional
+    public void updateRecord(Long recordId, RecordUpdateDto recordUpdateDto) {
+        Record record=recordFinder.findByRecordId(recordId);
+        record.update(
+                recordUpdateDto.getTitle(),
+                recordUpdateDto.getMemo(),
+                recordUpdateDto.getDate(),
+                recordUpdateDto.is_public()
+        );
+
+
     }
 }
