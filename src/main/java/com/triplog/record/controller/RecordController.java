@@ -45,4 +45,11 @@ public class RecordController {
         recordService.updateRecord(record_id,recordUpdateDto);
         return ResponseEntity.ok("기록이 수정되었습니다.");
     }
+
+    @DeleteMapping("/{record_id}")
+    @Operation(summary = "기록 삭제", description = "여행의 기록을 삭제합니다.")
+    public ResponseEntity<?> deleteRecord(@PathVariable Long record_id) {
+        recordService.deleteRecord(record_id);
+        return ResponseEntity.ok("기록이 삭제되었습니다.");
+    }
 }

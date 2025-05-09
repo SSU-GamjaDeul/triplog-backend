@@ -77,7 +77,11 @@ public class RecordService {
                 recordUpdateDto.getDate(),
                 recordUpdateDto.is_public()
         );
+    }
 
-
+    @Transactional
+    public void deleteRecord(Long recordId) {
+        Record record=recordFinder.findByRecordId(recordId);
+        recordRepository.delete(record);
     }
 }
