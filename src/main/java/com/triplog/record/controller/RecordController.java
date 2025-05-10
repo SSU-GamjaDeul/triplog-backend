@@ -2,6 +2,7 @@ package com.triplog.record.controller;
 
 import com.triplog.record.dto.RecordCreateDto;
 import com.triplog.record.dto.RecordFindAllByPlaceResponse;
+import com.triplog.record.dto.RecordUpdateDto;
 import com.triplog.record.service.RecordService;
 import com.triplog.user.jwt.CustomUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
@@ -36,5 +37,19 @@ public class RecordController {
         String nickname=userDetails.getUsername();
         recordService.createRecord(nickname,trip_id,recordCreateDto);
         return ResponseEntity.ok("기록이 생성되었습니다.");
+    }
+
+    @PatchMapping("/{record_id}")
+    @Operation(summary = "기록 수정", description = "여행의 기록을 수정합니다.")
+    public ResponseEntity<?> updateRecord(@PathVariable Long record_id, @RequestBody RecordUpdateDto recordUpdateDto) {
+        recordService.updateRecord(record_id,recordUpdateDto);
+        return ResponseEntity.ok("기록이 수정되었습니다.");
+    }
+
+    @DeleteMapping("/{record_id}")
+    @Operation(summary = "기록 삭제", description = "여행의 기록을 삭제합니다.")
+    public ResponseEntity<?> deleteRecord(@PathVariable Long record_id) {
+        recordService.deleteRecord(record_id);
+        return ResponseEntity.ok("기록이 삭제되었습니다.");
     }
 }

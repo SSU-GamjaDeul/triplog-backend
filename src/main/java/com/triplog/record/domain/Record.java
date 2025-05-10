@@ -48,5 +48,12 @@ public class Record extends BaseEntity {
     private LocalDate date;
 
     private boolean isPublic;
+
+    public void update(String title, String memo, LocalDate date, boolean isPublic) {
+        this.title = title;
+        this.memo = memo;
+        this.date = date;
+        this.isPublic = isPublic;
+    }
 }
 

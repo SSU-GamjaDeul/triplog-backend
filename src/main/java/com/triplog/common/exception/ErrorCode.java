@@ -24,6 +24,7 @@ public enum ErrorCode {
 	TRIP_NOT_FOUND(HttpStatus.NOT_FOUND, "여행 정보를 찾을 수 없습니다."),
 
 	// Record
+	RECORD_NOT_FOUND(HttpStatus.NOT_FOUND,"기록 정보를 찾을 수 없습니다."),
 
 	// Bookmark
 	BOOKMARK_ALREADY_EXISTS(HttpStatus.CONFLICT, "이미 존재하는 북마크 정보입니다."),
