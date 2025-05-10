@@ -36,6 +36,23 @@ public class RecordService {
     private final TripFinder tripFinder;
     private final RecordFinder recordFinder;
 
+    public RecordFindAllByPlaceResponse getRecordsByPlace(Long kakaoPlaceId) {
+
+        Place place = placeFinder.findByKakaoPlaceId(kakaoPlaceId);
+        List<Record> records = recordRepository.findAllByPlaceAndIsPublicTrueOrderByDateDesc(place);
+
+        List<RecordFindAllByPlaceResponse.Item> responseList = records.stream()
+                .map(record -> {
+                    List<RecordTag> tags = recordTagRepository.findAllByRecord(record);
+                    return RecordFindAllByPlaceResponse.Item.from(record, tags);
+                })
+                .toList();
+
+        return RecordFindAllByPlaceResponse.builder()
+                .records(responseList)
+                .build();
+    }
+
     @Transactional
     public void createRecord(String nickname, Long tripId, RecordCreateDto recordCreateDto) {
         User user=userFinder.findByNickname(nickname);
@@ -67,23 +84,6 @@ public class RecordService {
     public void deleteRecord(Long recordId) {
         Record record=recordFinder.findByRecordId(recordId);
         recordRepository.delete(record);
-    }
-
-    public RecordFindAllByPlaceResponse getRecordsByPlace(Long kakaoPlaceId) {
-
-        Place place = placeFinder.findByKakaoPlaceId(kakaoPlaceId);
-        List<Record> records = recordRepository.findAllByPlaceAndIsPublicTrueOrderByDateDesc(place);
-
-        List<RecordFindAllByPlaceResponse.Item> responseList = records.stream()
-                .map(record -> {
-                    List<RecordTag> tags = recordTagRepository.findAllByRecord(record);
-                    return RecordFindAllByPlaceResponse.Item.from(record, tags);
-                })
-                .toList();
-
-        return RecordFindAllByPlaceResponse.builder()
-                .records(responseList)
-                .build();
     }
 
     public RecordFindAllByLocationResponse getRecordsByLocation(String nickname,
