@@ -2,10 +2,12 @@ package com.triplog.record.service;
 
 import com.triplog.place.PlaceFinder;
 import com.triplog.place.domain.Place;
+import com.triplog.place.domain.enums.Category;
 import com.triplog.record.RecordFinder;
 import com.triplog.record.domain.Record;
 import com.triplog.record.domain.RecordTag;
 import com.triplog.record.dto.RecordCreateDto;
+import com.triplog.record.dto.RecordFindAllByLocationResponse;
 import com.triplog.record.dto.RecordFindAllByPlaceResponse;
 import com.triplog.record.dto.RecordUpdateDto;
 import com.triplog.record.repository.RecordRepository;
@@ -33,7 +35,6 @@ public class RecordService {
     private final UserFinder userFinder;
     private final TripFinder tripFinder;
     private final RecordFinder recordFinder;
-
 
     public RecordFindAllByPlaceResponse getRecordsByPlace(Long kakaoPlaceId) {
 
@@ -83,5 +84,27 @@ public class RecordService {
     public void deleteRecord(Long recordId) {
         Record record=recordFinder.findByRecordId(recordId);
         recordRepository.delete(record);
+    }
+
+    public RecordFindAllByLocationResponse getRecordsByLocation(String nickname,
+                                                                double minLat,
+                                                                double maxLat,
+                                                                double minLng,
+                                                                double maxLng,
+                                                                List<Category> categories) {
+
+        User user = userFinder.findByNickname(nickname);
+
+        List<Place> places = placeFinder.findAllByLatitudeAndLongitudeAndCategory(minLat, maxLat, minLng, maxLng, categories);
+
+        List<Record> records = recordRepository.findAllByUserAndPlaceIn(user, places);
+
+        List<RecordFindAllByLocationResponse.Item> responseList = records.stream()
+                .map(RecordFindAllByLocationResponse.Item::from)
+                .toList();
+
+        return RecordFindAllByLocationResponse.builder()
+                .records(responseList)
+                .build();
     }
 }
