@@ -2,6 +2,7 @@ package com.triplog.record.service;
 
 import com.triplog.place.PlaceFinder;
 import com.triplog.place.domain.Place;
+import com.triplog.place.domain.enums.Category;
 import com.triplog.record.RecordFinder;
 import com.triplog.record.domain.Record;
 import com.triplog.record.domain.RecordTag;
@@ -89,11 +90,12 @@ public class RecordService {
                                                                 double minLat,
                                                                 double maxLat,
                                                                 double minLng,
-                                                                double maxLng) {
+                                                                double maxLng,
+                                                                List<Category> categories) {
 
         User user = userFinder.findByNickname(nickname);
 
-        List<Place> places = placeFinder.findAllByLatitudeBetweenAndLongitudeBetween(minLat, maxLat, minLng, maxLng);
+        List<Place> places = placeFinder.findAllByLatitudeAndLongitudeAndCategory(minLat, maxLat, minLng, maxLng, categories);
 
         List<Record> records = recordRepository.findAllByUserAndPlaceIn(user, places);
 

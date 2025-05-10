@@ -1,5 +1,6 @@
 package com.triplog.record.controller;
 
+import com.triplog.place.domain.enums.Category;
 import com.triplog.record.dto.RecordCreateDto;
 import com.triplog.record.dto.RecordFindAllByLocationResponse;
 import com.triplog.record.dto.RecordFindAllByPlaceResponse;
@@ -13,6 +14,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/records")
@@ -55,16 +58,16 @@ public class RecordController {
     }
 
     @GetMapping("/location")
-    @Operation(summary = "위치 기반 기록 목록 조회", description = "입력한 위치 범위 내에 포함된 장소들에 대해, 해당 사용자의 기록 목록을 조회합니다.")
+    @Operation(summary = "위치 기반 기록 목록 조회 (카테고리 필터 포함)", description = "위도·경도 범위와 선택한 카테고리에 해당하는 장소들을 기준으로 사용자의 기록 목록을 조회합니다.")
     public ResponseEntity<RecordFindAllByLocationResponse> getRecordsByLocation(@AuthenticationPrincipal CustomUserDetails userDetails,
                                                                                 @RequestParam double minLat,
                                                                                 @RequestParam double maxLat,
                                                                                 @RequestParam double minLng,
-                                                                                @RequestParam double maxLng) {
+                                                                                @RequestParam double maxLng,
+                                                                                @RequestParam(required = false) List<Category> categories) {
 
         String nickname = userDetails.getUsername();
-
-        RecordFindAllByLocationResponse response = recordService.getRecordsByLocation(nickname, minLat, maxLat, minLng, maxLng);
+        RecordFindAllByLocationResponse response = recordService.getRecordsByLocation(nickname, minLat, maxLat, minLng, maxLng, categories);
 
         return ResponseEntity.ok(response);
     }
