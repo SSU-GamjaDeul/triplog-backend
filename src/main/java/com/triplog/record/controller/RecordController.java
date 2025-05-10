@@ -1,6 +1,7 @@
 package com.triplog.record.controller;
 
 import com.triplog.record.dto.RecordCreateDto;
+import com.triplog.record.dto.RecordFindAllByLocationResponse;
 import com.triplog.record.dto.RecordFindAllByPlaceResponse;
 import com.triplog.record.dto.RecordUpdateDto;
 import com.triplog.record.service.RecordService;
@@ -22,15 +23,6 @@ public class RecordController {
 
     private final RecordService recordService;
 
-    @GetMapping
-    @Operation(summary = "장소 기반 기록 목록 조회", description = "카카오 장소 id를 기반으로 해당 장소에 대한 모든 유저의 공개된 기록 목록을 생성합니다.")
-    public ResponseEntity<RecordFindAllByPlaceResponse> getRecordsByPlace(@RequestParam Long kakaoPlaceId) {
-
-        RecordFindAllByPlaceResponse response = recordService.getRecordsByPlace(kakaoPlaceId);
-
-        return ResponseEntity.ok(response);
-    }
-
     @PostMapping("/trips/{trip_id}")
     @Operation(summary = "기록 생성", description = "여행의 기록을 생성합니다.")
     public ResponseEntity<?> createRecord(@AuthenticationPrincipal CustomUserDetails userDetails, @PathVariable Long trip_id, @RequestBody RecordCreateDto recordCreateDto) {
@@ -51,5 +43,29 @@ public class RecordController {
     public ResponseEntity<?> deleteRecord(@PathVariable Long record_id) {
         recordService.deleteRecord(record_id);
         return ResponseEntity.ok("기록이 삭제되었습니다.");
+    }
+
+    @GetMapping("/place")
+    @Operation(summary = "장소 기반 기록 목록 조회", description = "카카오 장소 id를 기반으로 해당 장소에 대한 모든 유저의 공개된 기록 목록을 조회합니다.")
+    public ResponseEntity<RecordFindAllByPlaceResponse> getRecordsByPlace(@RequestParam Long kakaoPlaceId) {
+
+        RecordFindAllByPlaceResponse response = recordService.getRecordsByPlace(kakaoPlaceId);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/location")
+    @Operation(summary = "위치 기반 기록 목록 조회", description = "입력한 위치 범위 내에 포함된 장소들에 대해, 해당 사용자의 기록 목록을 조회합니다.")
+    public ResponseEntity<RecordFindAllByLocationResponse> getRecordsByLocation(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                                                @RequestParam double minLat,
+                                                                                @RequestParam double maxLat,
+                                                                                @RequestParam double minLng,
+                                                                                @RequestParam double maxLng) {
+
+        String nickname = userDetails.getUsername();
+
+        RecordFindAllByLocationResponse response = recordService.getRecordsByLocation(nickname, minLat, maxLat, minLng, maxLng);
+
+        return ResponseEntity.ok(response);
     }
 }

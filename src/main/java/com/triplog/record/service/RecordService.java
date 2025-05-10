@@ -6,6 +6,7 @@ import com.triplog.record.RecordFinder;
 import com.triplog.record.domain.Record;
 import com.triplog.record.domain.RecordTag;
 import com.triplog.record.dto.RecordCreateDto;
+import com.triplog.record.dto.RecordFindAllByLocationResponse;
 import com.triplog.record.dto.RecordFindAllByPlaceResponse;
 import com.triplog.record.dto.RecordUpdateDto;
 import com.triplog.record.repository.RecordRepository;
@@ -33,24 +34,6 @@ public class RecordService {
     private final UserFinder userFinder;
     private final TripFinder tripFinder;
     private final RecordFinder recordFinder;
-
-
-    public RecordFindAllByPlaceResponse getRecordsByPlace(Long kakaoPlaceId) {
-
-        Place place = placeFinder.findByKakaoPlaceId(kakaoPlaceId);
-        List<Record> records = recordRepository.findAllByPlaceAndIsPublicTrueOrderByDateDesc(place);
-
-        List<RecordFindAllByPlaceResponse.Item> responseList = records.stream()
-                .map(record -> {
-                    List<RecordTag> tags = recordTagRepository.findAllByRecord(record);
-                    return RecordFindAllByPlaceResponse.Item.from(record, tags);
-                })
-                .toList();
-
-        return RecordFindAllByPlaceResponse.builder()
-                .records(responseList)
-                .build();
-    }
 
     @Transactional
     public void createRecord(String nickname, Long tripId, RecordCreateDto recordCreateDto) {
@@ -83,5 +66,43 @@ public class RecordService {
     public void deleteRecord(Long recordId) {
         Record record=recordFinder.findByRecordId(recordId);
         recordRepository.delete(record);
+    }
+
+    public RecordFindAllByPlaceResponse getRecordsByPlace(Long kakaoPlaceId) {
+
+        Place place = placeFinder.findByKakaoPlaceId(kakaoPlaceId);
+        List<Record> records = recordRepository.findAllByPlaceAndIsPublicTrueOrderByDateDesc(place);
+
+        List<RecordFindAllByPlaceResponse.Item> responseList = records.stream()
+                .map(record -> {
+                    List<RecordTag> tags = recordTagRepository.findAllByRecord(record);
+                    return RecordFindAllByPlaceResponse.Item.from(record, tags);
+                })
+                .toList();
+
+        return RecordFindAllByPlaceResponse.builder()
+                .records(responseList)
+                .build();
+    }
+
+    public RecordFindAllByLocationResponse getRecordsByLocation(String nickname,
+                                                                double minLat,
+                                                                double maxLat,
+                                                                double minLng,
+                                                                double maxLng) {
+
+        User user = userFinder.findByNickname(nickname);
+
+        List<Place> places = placeFinder.findAllByLatitudeBetweenAndLongitudeBetween(minLat, maxLat, minLng, maxLng);
+
+        List<Record> records = recordRepository.findAllByUserAndPlaceIn(user, places);
+
+        List<RecordFindAllByLocationResponse.Item> responseList = records.stream()
+                .map(RecordFindAllByLocationResponse.Item::from)
+                .toList();
+
+        return RecordFindAllByLocationResponse.builder()
+                .records(responseList)
+                .build();
     }
 }
