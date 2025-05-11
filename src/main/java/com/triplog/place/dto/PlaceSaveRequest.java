@@ -16,7 +16,7 @@ public record PlaceSaveRequest(
         @Schema(description = "주소", example = "서울특별시 강남구 강남대로 364")
         String address,
 
-        @Schema(description = "장소 카테고리", example = "CAFE")
+        @Schema(description = "장소 카테고리", example = "CAFE_BAKERY")
         Category category,
 
         @Schema(description = "카카오 장소 ID", example = "123456789")
