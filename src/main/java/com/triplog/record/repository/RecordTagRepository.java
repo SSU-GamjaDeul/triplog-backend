@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface RecordTagRepository extends JpaRepository<RecordTag, Long> {
     List<RecordTag> findAllByRecord(Record record);
+
+    void deleteAllByRecord(Record record);
 }
