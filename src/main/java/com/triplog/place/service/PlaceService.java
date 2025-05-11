@@ -22,17 +22,11 @@ public class PlaceService {
     @Transactional
     public PlaceSaveResponse save(PlaceSaveRequest request) {
 
-        // 중복 체크 : 이름과 장소가 모두 일치하는 장소가 이미 DB에 있는 경우, 에러를 반환한다.
-        boolean isExistingPlace = placeRepository.existsByNameAndAddress(request.name(), request.address());
-
-        if(isExistingPlace) {
+        if(placeRepository.existsByKakaoPlaceId(request.kakaoPlaceId())) {
             throw new CustomException(ErrorCode.PLACE_ALREADY_EXISTS);
         }
 
-        Place place = Place.builder()
-                .name(request.name())
-                .address(request.address())
-                .build();
+        Place place = Place.from(request);
 
         Place savedPlace = placeRepository.save(place);
 
