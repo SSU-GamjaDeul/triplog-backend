@@ -3,6 +3,7 @@ package com.triplog.record.repository;
 import com.triplog.place.domain.Place;
 import com.triplog.record.domain.Record;
 import com.triplog.user.domain.User;
+import com.triplog.user.repository.UserRepository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -17,4 +18,6 @@ public interface RecordRepository extends JpaRepository<Record, Long> {
     List<Record> findAllByUserAndPlaceIn(User user, List<Place> places);
 
     Optional<Record> findById(Long id);
+
+    List<Record> findAllByUser(User user);
 }

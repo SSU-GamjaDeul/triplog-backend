@@ -6,10 +6,7 @@ import com.triplog.place.domain.enums.Category;
 import com.triplog.record.RecordFinder;
 import com.triplog.record.domain.Record;
 import com.triplog.record.domain.RecordTag;
-import com.triplog.record.dto.RecordCreateRequest;
-import com.triplog.record.dto.RecordFindAllByLocationResponse;
-import com.triplog.record.dto.RecordFindAllByPlaceResponse;
-import com.triplog.record.dto.RecordUpdateRequest;
+import com.triplog.record.dto.*;
 import com.triplog.record.repository.RecordRepository;
 import com.triplog.record.repository.RecordTagRepository;
 import com.triplog.trip.TripFinder;
@@ -125,6 +122,21 @@ public class RecordService {
                 .toList();
 
         return RecordFindAllByLocationResponse.builder()
+                .records(responseList)
+                .build();
+    }
+
+
+    public RecordFindAllByUserResponse getRecordsByUser(String username) {
+        User user = userFinder.findByNickname(username);
+        List<Record> records=recordRepository.findAllByUser(user);
+        List<RecordFindAllByUserResponse.Item> responseList=records.stream()
+                .map(record -> {
+                    List<RecordTag> tags=recordTagRepository.findAllByRecord(record);
+                    return RecordFindAllByUserResponse.Item.from(record, tags);
+                })
+                .toList();
+        return RecordFindAllByUserResponse.builder()
                 .records(responseList)
                 .build();
     }
