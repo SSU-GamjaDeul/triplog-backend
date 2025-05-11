@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public interface PlaceRepository extends JpaRepository<Place, Long> {
 
-    boolean existsByNameAndAddress(String name, String Address);
+    boolean existsByKakaoPlaceId(Long kakaoPlaceId);
 
     List<Place> findAllByLatitudeBetweenAndLongitudeBetween(
             double minLat, double maxLat, double minLng, double maxLng);

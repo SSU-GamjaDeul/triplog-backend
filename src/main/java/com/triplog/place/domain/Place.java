@@ -2,6 +2,7 @@ package com.triplog.place.domain;
 
 import com.triplog.common.domain.BaseEntity;
 import com.triplog.place.domain.enums.Category;
+import com.triplog.place.dto.PlaceSaveRequest;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -37,4 +38,15 @@ public class Place extends BaseEntity {
     private Category category;
 
     private Long kakaoPlaceId;
+
+    public static Place from(PlaceSaveRequest request) {
+        return Place.builder()
+                .name(request.name())
+                .address(request.address())
+                .latitude(request.latitude())
+                .longitude(request.longitude())
+                .category(request.category())
+                .kakaoPlaceId(request.kakaoPlaceId())
+                .build();
+    }
 }
