@@ -6,10 +6,7 @@ import com.triplog.place.domain.enums.Category;
 import com.triplog.record.RecordFinder;
 import com.triplog.record.domain.Record;
 import com.triplog.record.domain.RecordTag;
-import com.triplog.record.dto.RecordCreateDto;
-import com.triplog.record.dto.RecordFindAllByLocationResponse;
-import com.triplog.record.dto.RecordFindAllByPlaceResponse;
-import com.triplog.record.dto.RecordUpdateDto;
+import com.triplog.record.dto.*;
 import com.triplog.record.repository.RecordRepository;
 import com.triplog.record.repository.RecordTagRepository;
 import com.triplog.trip.TripFinder;
@@ -54,35 +51,56 @@ public class RecordService {
     }
 
     @Transactional
-    public void createRecord(String nickname, Long tripId, RecordCreateDto recordCreateDto) {
+    public void createRecord(String nickname, Long tripId, RecordCreateRequest recordCreateDto) {
         User user=userFinder.findByNickname(nickname);
         Trip trip = tripFinder.findByTripId(tripId);
-        Place place = placeFinder.findByKakaoPlaceId(recordCreateDto.getKakaoPlaceId());
+        Place place = placeFinder.findByKakaoPlaceId(recordCreateDto.kakaoPlaceId());
 
         Record record=Record.builder()
                 .user(user)
-                .title(recordCreateDto.getTitle())
-                .memo(recordCreateDto.getMemo())
-                .date(recordCreateDto.getDate())
-                .isPublic(recordCreateDto.is_public())
+                .title(recordCreateDto.title())
+                .memo(recordCreateDto.memo())
+                .date(recordCreateDto.date())
+                .isPublic(recordCreateDto.isPublic())
                 .build();
+        List<String> tagContents=recordCreateDto.tags();
+
+        for(String tagContent:tagContents){
+            RecordTag recordTag=RecordTag.builder()
+                    .record(record)
+                    .content(tagContent)
+                    .build();
+            recordTagRepository.save(recordTag);
+        }
         recordRepository.save(record);
     }
 
     @Transactional
-    public void updateRecord(Long recordId, RecordUpdateDto recordUpdateDto) {
+    public void updateRecord(Long recordId, RecordUpdateRequest recordUpdateDto) {
         Record record=recordFinder.findByRecordId(recordId);
         record.update(
-                recordUpdateDto.getTitle(),
-                recordUpdateDto.getMemo(),
-                recordUpdateDto.getDate(),
-                recordUpdateDto.is_public()
+                recordUpdateDto.title(),
+                recordUpdateDto.memo(),
+                recordUpdateDto.date(),
+                recordUpdateDto.isPublic()
         );
+        recordTagRepository.deleteAllByRecord(record);
+        List<String> newTags = recordUpdateDto.tags();
+        if (newTags != null) {
+            for (String tag : newTags) {
+                RecordTag recordTag = RecordTag.builder()
+                        .record(record)
+                        .content(tag)
+                        .build();
+                recordTagRepository.save(recordTag);
+            }
+        }
     }
 
     @Transactional
     public void deleteRecord(Long recordId) {
         Record record=recordFinder.findByRecordId(recordId);
+        recordTagRepository.deleteAllByRecord(record);
         recordRepository.delete(record);
     }
 
@@ -104,6 +122,21 @@ public class RecordService {
                 .toList();
 
         return RecordFindAllByLocationResponse.builder()
+                .records(responseList)
+                .build();
+    }
+
+
+    public RecordFindAllByUserResponse getRecordsByUser(String username) {
+        User user = userFinder.findByNickname(username);
+        List<Record> records=recordRepository.findAllByUser(user);
+        List<RecordFindAllByUserResponse.Item> responseList=records.stream()
+                .map(record -> {
+                    List<RecordTag> tags=recordTagRepository.findAllByRecord(record);
+                    return RecordFindAllByUserResponse.Item.from(record, tags);
+                })
+                .toList();
+        return RecordFindAllByUserResponse.builder()
                 .records(responseList)
                 .build();
     }
