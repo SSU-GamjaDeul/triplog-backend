@@ -3,6 +3,7 @@ package com.triplog.trip;
 import com.triplog.trip.domain.Trip;
 import com.triplog.trip.domain.TripParticipant;
 import com.triplog.trip.domain.TripTag;
+import com.triplog.trip.dto.TripFindByUserResponse;
 import com.triplog.trip.repository.TripTagRepository;
 import com.triplog.user.domain.User;
 import com.triplog.trip.dto.TripCreateRequest;
@@ -59,6 +60,24 @@ public class TripService {
 
         return TripCreateResponse.builder()
                 .tripId(savedTrip.getId())
+                .build();
+    }
+
+    public TripFindByUserResponse getTripsByUser(String username) {
+        User user = userFinder.findByNickname(username);
+
+        List<TripParticipant> participationList = tripParticipantRepository.findByUser(user);
+
+        List<TripFindByUserResponse.Item> responseItems = participationList.stream()
+                .map(participant -> {
+                    Trip trip = participant.getTrip();
+                    List<TripTag> tags = tripTagRepository.findByTrip(trip);
+                    return TripFindByUserResponse.Item.from(trip, tags);
+                })
+                .toList();
+
+        return TripFindByUserResponse.builder()
+                .trips(responseItems)
                 .build();
     }
 
