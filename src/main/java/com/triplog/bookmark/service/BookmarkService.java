@@ -2,6 +2,7 @@ package com.triplog.bookmark.service;
 
 import com.triplog.bookmark.domain.Bookmark;
 import com.triplog.bookmark.dto.BookmarkDeleteRequest;
+import com.triplog.bookmark.dto.BookmarkFindAllByLocationResponse;
 import com.triplog.bookmark.dto.BookmarkSaveRequest;
 import com.triplog.bookmark.repository.BookmarkRepository;
 import com.triplog.common.exception.CustomException;
@@ -14,6 +15,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Slf4j
 @Service
@@ -53,5 +56,26 @@ public class BookmarkService {
                 .orElseThrow(() -> new CustomException(ErrorCode.BOOKMARK_NOT_FOUND));
 
         bookmarkRepository.delete(bookmark);
+    }
+
+    public BookmarkFindAllByLocationResponse getBookmarksByLocation(String nickname,
+                                                                    double minLat,
+                                                                    double maxLat,
+                                                                    double minLng,
+                                                                    double maxLng) {
+
+        User user = userFinder.findByNickname(nickname);
+
+        List<Place> places = placeFinder.findAllByLatitudeAndLongitudeAndCategory(minLat, maxLat, minLng, maxLng, null);
+
+        List<Bookmark> bookmarks = bookmarkRepository.findAllByUserAndPlaceIn(user, places);
+
+        List<BookmarkFindAllByLocationResponse.Item> responseList = bookmarks.stream()
+                .map(BookmarkFindAllByLocationResponse.Item::from)
+                .toList();
+
+        return BookmarkFindAllByLocationResponse.builder()
+                .bookmarks(responseList)
+                .build();
     }
 }

@@ -1,5 +1,6 @@
 package com.triplog.bookmark.controller;
 
+import com.triplog.bookmark.dto.BookmarkFindAllByLocationResponse;
 import com.triplog.bookmark.service.BookmarkService;
 import com.triplog.bookmark.dto.BookmarkDeleteRequest;
 import com.triplog.bookmark.dto.BookmarkSaveRequest;
@@ -12,9 +13,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -46,5 +49,19 @@ public class BookmarkController {
         bookmarkService.delete(nickname, request);
 
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/location")
+    @Operation(summary = "위치 기반 북마크 목록 조회", description = "위도·경도 범위에 해당하는 장소들을 기준으로 사용자가 북마크한 장소들을 조회합니다.")
+    public ResponseEntity<BookmarkFindAllByLocationResponse> getBookmarksByLocation(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                                               @RequestParam double minLat,
+                                                                               @RequestParam double maxLat,
+                                                                               @RequestParam double minLng,
+                                                                               @RequestParam double maxLng) {
+
+        String nickname = userDetails.getUsername();
+        BookmarkFindAllByLocationResponse response = bookmarkService.getBookmarksByLocation(nickname, minLat, maxLat, minLng, maxLng);
+
+        return ResponseEntity.ok(response);
     }
 }
