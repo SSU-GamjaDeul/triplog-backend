@@ -2,6 +2,8 @@ package com.triplog.trip;
 
 import com.triplog.trip.domain.Trip;
 import com.triplog.trip.domain.TripParticipant;
+import com.triplog.trip.domain.TripTag;
+import com.triplog.trip.repository.TripTagRepository;
 import com.triplog.user.domain.User;
 import com.triplog.trip.dto.TripCreateRequest;
 import com.triplog.trip.dto.TripCreateResponse;
@@ -12,7 +14,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 
 @Slf4j
@@ -22,6 +23,7 @@ import java.util.List;
 public class TripService {
     private final TripRepository tripRepository;
     private final TripParticipantRepository tripParticipantRepository;
+    private final TripTagRepository tripTagRepository;
     private final UserFinder userFinder;
 
 
@@ -45,6 +47,15 @@ public class TripService {
                 .build();
 
         tripParticipantRepository.save(participant);
+
+        List<String> tripTagContents = request.tags();
+        for(String tripTagContent:tripTagContents){
+            TripTag tripTag = TripTag.builder()
+                    .trip(savedTrip)
+                    .content(tripTagContent)
+                    .build();
+            tripTagRepository.save(tripTag);
+        }
 
         return TripCreateResponse.builder()
                 .tripId(savedTrip.getId())
