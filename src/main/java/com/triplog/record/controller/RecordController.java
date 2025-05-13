@@ -84,4 +84,12 @@ public class RecordController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/detail/{record_id}")
+    @Operation(summary = "기록 상세 조회", description = "해당 기록에 대한 상세 정보를 조회합니다.")
+    public ResponseEntity<RecordDetailResponse> getRecordDetail(@PathVariable Long record_id){
+        RecordDetailResponse response=recordService.getRecordDetail(record_id);
+        return ResponseEntity.ok(response);
+
+    }
+
 }
