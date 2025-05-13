@@ -2,6 +2,7 @@ package com.triplog.record.repository;
 
 import com.triplog.place.domain.Place;
 import com.triplog.record.domain.Record;
+import com.triplog.trip.domain.Trip;
 import com.triplog.user.domain.User;
 import com.triplog.user.repository.UserRepository;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -20,4 +21,5 @@ public interface RecordRepository extends JpaRepository<Record, Long> {
     Optional<Record> findById(Long id);
 
     List<Record> findAllByUser(User user);
+    List<Record> findAllByTrip(Trip trip);
 }

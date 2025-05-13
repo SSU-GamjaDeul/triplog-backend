@@ -77,4 +77,11 @@ public class RecordController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/{trip_id}")
+    @Operation(summary = "여행 기반 기록 목록 조회", description = "여행에 대해 작성된 모든 기록을 조회합니다.")
+    public ResponseEntity<RecordFindAllByTripResponse> getRecordsByTrip(@PathVariable Long trip_id) {
+        RecordFindAllByTripResponse response=recordService.getRecordsByTrip(trip_id);
+        return ResponseEntity.ok(response);
+    }
+
 }

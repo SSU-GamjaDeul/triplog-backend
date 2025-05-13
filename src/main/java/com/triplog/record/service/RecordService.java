@@ -140,4 +140,18 @@ public class RecordService {
                 .records(responseList)
                 .build();
     }
+
+    public RecordFindAllByTripResponse getRecordsByTrip(Long tripId) {
+        Trip trip = tripFinder.findByTripId(tripId);
+        List<Record> records=recordRepository.findAllByTrip(trip);
+        List<RecordFindAllByTripResponse.Item> responseList=records.stream()
+                .map(record -> {
+                    List<RecordTag> tags=recordTagRepository.findAllByRecord(record);
+                    return RecordFindAllByTripResponse.Item.from(record, tags);
+                })
+                .toList();
+        return RecordFindAllByTripResponse.builder()
+                .records(responseList)
+                .build();
+    }
 }
