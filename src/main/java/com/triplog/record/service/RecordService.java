@@ -154,4 +154,10 @@ public class RecordService {
                 .records(responseList)
                 .build();
     }
+
+    public RecordDetailResponse getRecordDetail(Long recordId) {
+        Record record=recordFinder.findByRecordId(recordId);
+        List<RecordTag> tags=recordTagRepository.findAllByRecord(record);
+        return RecordDetailResponse.from(record,tags);
+    }
 }
