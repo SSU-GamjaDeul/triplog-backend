@@ -108,6 +108,8 @@ public class RecordService {
                 recordTagRepository.save(recordTag);
             }
         }
+
+        recordImageRepository.deleteAllByRecord(record);
         List<String> newImageUrls = recordUpdateDto.imageUrls();
         if (newImageUrls != null) {
             for (String imageUrl : newImageUrls) {
