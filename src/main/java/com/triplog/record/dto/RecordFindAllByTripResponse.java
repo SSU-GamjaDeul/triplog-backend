@@ -1,6 +1,7 @@
 package com.triplog.record.dto;
 
 import com.triplog.record.domain.Record;
+import com.triplog.record.domain.RecordImage;
 import com.triplog.record.domain.RecordTag;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -25,11 +26,15 @@ public record RecordFindAllByTripResponse (
                     arraySchema = @Schema(description = "태그 목록", nullable = false),
                     schema = @Schema(example = "감성")
             )
-            List<String> tag
+            List<String> tag,
+            List<String> imageUrls
     ) {
-        public static Item from(Record record, List<RecordTag> tags) {
+        public static Item from(Record record, List<RecordTag> tags, List<RecordImage> imageUrls) {
             List<String> tagContents = tags.stream()
                     .map(RecordTag::getContent)
+                    .toList();
+            List<String> imageUrlContents = imageUrls.stream()
+                    .map(RecordImage::getImageUrl)
                     .toList();
 
             String formattedDate = record.getDate().format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));
@@ -39,6 +44,7 @@ public record RecordFindAllByTripResponse (
                     .title(record.getTitle())
                     .date(formattedDate)
                     .tag(tagContents)
+                    .imageUrls(imageUrlContents)
                     .build();
         }
     }

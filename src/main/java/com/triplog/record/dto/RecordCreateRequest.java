@@ -11,5 +11,6 @@ public record RecordCreateRequest (
         String memo,
         LocalDate date,
         boolean isPublic,
-        List<String> tags){
+        List<String> tags,
+        List<String> imageUrl){
 }

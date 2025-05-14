@@ -1,5 +1,6 @@
 package com.triplog.record.dto;
 
+import com.triplog.record.domain.RecordImage;
 import com.triplog.record.domain.RecordTag;
 import lombok.Builder;
 import com.triplog.record.domain.Record;
@@ -16,12 +17,18 @@ public record RecordDetailResponse (
         String placeName,
         double latitude,
         double longitude,
-        List<String> tags
+        List<String> tags,
+        List<String> imageUrl
 ) {
-    public static RecordDetailResponse from(Record record, List<RecordTag> tags) {
+    public static RecordDetailResponse from(Record record, List<RecordTag> tags,List<RecordImage> imageUrls) {
         List<String> tagContents = tags.stream()
                 .map(RecordTag::getContent)
                 .toList();
+
+        List<String> imageUrlContents = imageUrls.stream()
+                .map(RecordImage::getImageUrl)
+                .toList();
+
         return RecordDetailResponse.builder()
                 .recordId(record.getId())
                 .title(record.getTitle())
@@ -33,6 +40,7 @@ public record RecordDetailResponse (
                 .latitude(record.getPlace().getLatitude())
                 .longitude(record.getPlace().getLongitude())
                 .tags(tagContents)
+                .imageUrl(imageUrlContents)
                 .build();
     }
 }

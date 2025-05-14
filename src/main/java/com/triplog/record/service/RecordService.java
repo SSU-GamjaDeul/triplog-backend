@@ -5,8 +5,10 @@ import com.triplog.place.domain.Place;
 import com.triplog.place.domain.enums.Category;
 import com.triplog.record.RecordFinder;
 import com.triplog.record.domain.Record;
+import com.triplog.record.domain.RecordImage;
 import com.triplog.record.domain.RecordTag;
 import com.triplog.record.dto.*;
+import com.triplog.record.repository.RecordImageRepository;
 import com.triplog.record.repository.RecordRepository;
 import com.triplog.record.repository.RecordTagRepository;
 import com.triplog.trip.TripFinder;
@@ -28,6 +30,7 @@ public class RecordService {
 
     private final RecordRepository recordRepository;
     private final RecordTagRepository recordTagRepository;
+    private final RecordImageRepository recordImageRepository;
     private final PlaceFinder placeFinder;
     private final UserFinder userFinder;
     private final TripFinder tripFinder;
@@ -58,6 +61,8 @@ public class RecordService {
 
         Record record=Record.builder()
                 .user(user)
+                .place(place)
+                .trip(trip)
                 .title(recordCreateDto.title())
                 .memo(recordCreateDto.memo())
                 .date(recordCreateDto.date())
@@ -71,6 +76,14 @@ public class RecordService {
                     .content(tagContent)
                     .build();
             recordTagRepository.save(recordTag);
+        }
+        List<String> imageUrls=recordCreateDto.imageUrl();
+        for(String images: imageUrls){
+            RecordImage recordImage=RecordImage.builder()
+                    .record(record)
+                    .imageUrl(images)
+                    .build();
+            recordImageRepository.save(recordImage);
         }
         recordRepository.save(record);
     }
@@ -95,11 +108,22 @@ public class RecordService {
                 recordTagRepository.save(recordTag);
             }
         }
+        List<String> newImageUrls = recordUpdateDto.imageUrls();
+        if (newImageUrls != null) {
+            for (String imageUrl : newImageUrls) {
+                RecordImage recordImage=RecordImage.builder()
+                        .record(record)
+                        .imageUrl(imageUrl)
+                        .build();
+                recordImageRepository.save(recordImage);
+            }
+        }
     }
 
     @Transactional
     public void deleteRecord(Long recordId) {
         Record record=recordFinder.findByRecordId(recordId);
+        recordImageRepository.deleteAllByRecord(record);
         recordTagRepository.deleteAllByRecord(record);
         recordRepository.delete(record);
     }
@@ -147,7 +171,8 @@ public class RecordService {
         List<RecordFindAllByTripResponse.Item> responseList=records.stream()
                 .map(record -> {
                     List<RecordTag> tags=recordTagRepository.findAllByRecord(record);
-                    return RecordFindAllByTripResponse.Item.from(record, tags);
+                    List<RecordImage> images = recordImageRepository.findAllByRecord(record);
+                    return RecordFindAllByTripResponse.Item.from(record, tags,images);
                 })
                 .toList();
         return RecordFindAllByTripResponse.builder()
@@ -158,6 +183,7 @@ public class RecordService {
     public RecordDetailResponse getRecordDetail(Long recordId) {
         Record record=recordFinder.findByRecordId(recordId);
         List<RecordTag> tags=recordTagRepository.findAllByRecord(record);
-        return RecordDetailResponse.from(record,tags);
+        List<RecordImage> images=recordImageRepository.findAllByRecord(record);
+        return RecordDetailResponse.from(record,tags,images);
     }
 }
