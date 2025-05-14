@@ -1,8 +1,12 @@
 package com.triplog.trip;
 
+import com.triplog.common.exception.CustomException;
+import com.triplog.common.exception.ErrorCode;
+import com.triplog.record.domain.RecordTag;
 import com.triplog.trip.domain.Trip;
 import com.triplog.trip.domain.TripParticipant;
 import com.triplog.trip.domain.TripTag;
+import com.triplog.trip.dto.TripDetailResponse;
 import com.triplog.trip.dto.TripFindByUserResponse;
 import com.triplog.trip.repository.TripTagRepository;
 import com.triplog.user.domain.User;
@@ -26,6 +30,7 @@ public class TripService {
     private final TripParticipantRepository tripParticipantRepository;
     private final TripTagRepository tripTagRepository;
     private final UserFinder userFinder;
+    private final TripFinder tripFinder;
 
 
     @Transactional
@@ -79,6 +84,12 @@ public class TripService {
         return TripFindByUserResponse.builder()
                 .trips(responseItems)
                 .build();
+    }
+
+    public TripDetailResponse getTripDetail(Long trip_id) {
+        Trip trip = tripFinder.findByTripId(trip_id);
+        List<TripTag> tags = tripTagRepository.findByTrip(trip);
+        return TripDetailResponse.from(trip, tags);
     }
 
 }
