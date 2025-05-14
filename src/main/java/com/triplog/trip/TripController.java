@@ -1,6 +1,7 @@
 package com.triplog.trip;
 import com.triplog.trip.dto.TripCreateRequest;
 import com.triplog.trip.dto.TripCreateResponse;
+import com.triplog.trip.dto.TripDetailResponse;
 import com.triplog.trip.dto.TripFindByUserResponse;
 import com.triplog.user.jwt.CustomUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
@@ -35,6 +36,13 @@ public class TripController {
     public ResponseEntity<TripFindByUserResponse> getTripsByUser(@AuthenticationPrincipal CustomUserDetails userDetails) {
         String username = userDetails.getUsername();
         TripFindByUserResponse response = tripService.getTripsByUser(username);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/trip/{trip_id}")
+    @Operation(summary = "여행 상세 조회", description = "각 여행의 상세 정보를 조회합니다.")
+    public ResponseEntity<TripDetailResponse> getTripDetail(@PathVariable Long trip_id) {
+        TripDetailResponse response = tripService.getTripDetail(trip_id);
         return ResponseEntity.ok(response);
     }
 }
