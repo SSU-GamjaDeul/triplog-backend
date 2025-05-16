@@ -1,8 +1,5 @@
 package com.triplog.trip;
-import com.triplog.trip.dto.TripCreateRequest;
-import com.triplog.trip.dto.TripCreateResponse;
-import com.triplog.trip.dto.TripDetailResponse;
-import com.triplog.trip.dto.TripFindByUserResponse;
+import com.triplog.trip.dto.*;
 import com.triplog.user.jwt.CustomUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -44,5 +41,12 @@ public class TripController {
     public ResponseEntity<TripDetailResponse> getTripDetail(@PathVariable Long trip_id) {
         TripDetailResponse response = tripService.getTripDetail(trip_id);
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/trip/{trip_id}/invite")
+    @Operation(summary = "동반자 초대", description = "사용자의 닉네임으로 여행에 동반자를 초대합니다.")
+    public ResponseEntity<String> inviteTrip(@PathVariable Long trip_id, @RequestBody @Valid TripInviteRequest request) {
+        tripService.inviteTrip(trip_id, request);
+        return ResponseEntity.ok("동반자 초대 완료");
     }
 }

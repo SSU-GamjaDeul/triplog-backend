@@ -6,12 +6,9 @@ import com.triplog.record.domain.RecordTag;
 import com.triplog.trip.domain.Trip;
 import com.triplog.trip.domain.TripParticipant;
 import com.triplog.trip.domain.TripTag;
-import com.triplog.trip.dto.TripDetailResponse;
-import com.triplog.trip.dto.TripFindByUserResponse;
+import com.triplog.trip.dto.*;
 import com.triplog.trip.repository.TripTagRepository;
 import com.triplog.user.domain.User;
-import com.triplog.trip.dto.TripCreateRequest;
-import com.triplog.trip.dto.TripCreateResponse;
 import com.triplog.trip.repository.TripParticipantRepository;
 import com.triplog.trip.repository.TripRepository;
 import com.triplog.user.UserFinder;
@@ -51,6 +48,7 @@ public class TripService {
         TripParticipant participant = TripParticipant.builder()
                 .user(user)
                 .trip(savedTrip)
+                .isAccepted(true)
                 .build();
 
         tripParticipantRepository.save(participant);
@@ -93,4 +91,24 @@ public class TripService {
         return TripDetailResponse.from(trip, tags);
     }
 
+    @Transactional
+    public void inviteTrip(Long trip_id, TripInviteRequest request) {
+        Trip trip = tripFinder.findByTripId(trip_id);
+        User invitedUser = userFinder.findByNickname(request.nickname());
+
+        boolean alreadyInvited = tripParticipantRepository
+                .existsByTripAndUser(trip, invitedUser);
+
+        if (alreadyInvited) {
+            throw new CustomException(ErrorCode.ALREADY_INVITED);
+        }
+
+        TripParticipant participant = TripParticipant.builder()
+                .user(invitedUser)
+                .trip(trip)
+                .isAccepted(false)
+                .build();
+
+        tripParticipantRepository.save(participant);
+    }
 }
