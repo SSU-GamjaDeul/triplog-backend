@@ -43,6 +43,7 @@ public class TripService {
                 .isPublic(request.isPublic())
                 .startDate(request.startDate())
                 .endDate(request.endDate())
+                .user(user)
                 .build();
 
         Trip savedTrip = tripRepository.save(trip);
