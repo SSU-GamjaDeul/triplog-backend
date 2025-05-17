@@ -98,6 +98,16 @@ public class TripService {
         Trip trip = tripFinder.findByTripId(tripId);
         User invitedUser = userFinder.findByNickname(request.nickname());
 
+        // 현재 로그인한 유저가 여행 참여자인지 확인
+        TripParticipant requesterParticipant = tripParticipantRepository
+                .findByTripAndUser(trip, user)
+                .orElseThrow(() -> new CustomException(ErrorCode.UNAUTHORIZED_ACCESS));
+
+        boolean isAcceptedParticipant = requesterParticipant.isAccepted();
+        if (!isAcceptedParticipant){
+            throw new CustomException(ErrorCode.UNAUTHORIZED_ACCESS);
+        }
+
         // 자기 자신 초대 방지
         if (user.equals(invitedUser)){
            throw new CustomException(ErrorCode.CANNOT_INVITE_SELF);
@@ -106,18 +116,17 @@ public class TripService {
         // 이미 초대된 유저인지 확인
         boolean alreadyInvited = tripParticipantRepository
                 .existsByTripAndUser(trip, invitedUser);
-
         if (alreadyInvited) {
             throw new CustomException(ErrorCode.ALREADY_INVITED);
         }
 
-        TripParticipant participant = TripParticipant.builder()
+        TripParticipant invitedParticipant = TripParticipant.builder()
                 .user(invitedUser)
                 .trip(trip)
                 .inviter(user.getNickname())
                 .isAccepted(false)
                 .build();
 
-        tripParticipantRepository.save(participant);
+        tripParticipantRepository.save(invitedParticipant);
     }
 }
