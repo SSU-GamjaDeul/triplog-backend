@@ -36,17 +36,17 @@ public class TripController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/trip/{trip_id}")
+    @PostMapping("/trip/{tripId}")
     @Operation(summary = "여행 상세 조회", description = "각 여행의 상세 정보를 조회합니다.")
-    public ResponseEntity<TripDetailResponse> getTripDetail(@PathVariable Long trip_id) {
-        TripDetailResponse response = tripService.getTripDetail(trip_id);
+    public ResponseEntity<TripDetailResponse> getTripDetail(@PathVariable Long tripId) {
+        TripDetailResponse response = tripService.getTripDetail(tripId);
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/trip/{trip_id}/invite")
+    @PostMapping("/trip/{tripId}/invite")
     @Operation(summary = "동반자 초대", description = "사용자의 닉네임으로 여행에 동반자를 초대합니다.")
-    public ResponseEntity<String> inviteTrip(@PathVariable Long trip_id, @RequestBody @Valid TripInviteRequest request) {
-        tripService.inviteTrip(trip_id, request);
+    public ResponseEntity<String> inviteTrip(@PathVariable Long tripId, @RequestBody @Valid TripInviteRequest request) {
+        tripService.inviteTrip(tripId, request);
         return ResponseEntity.ok("동반자 초대 완료");
     }
 }
