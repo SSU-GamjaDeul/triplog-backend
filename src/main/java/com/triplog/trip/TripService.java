@@ -85,15 +85,15 @@ public class TripService {
                 .build();
     }
 
-    public TripDetailResponse getTripDetail(Long trip_id) {
-        Trip trip = tripFinder.findByTripId(trip_id);
+    public TripDetailResponse getTripDetail(Long tripId) {
+        Trip trip = tripFinder.findByTripId(tripId);
         List<TripTag> tags = tripTagRepository.findByTrip(trip);
         return TripDetailResponse.from(trip, tags);
     }
 
     @Transactional
-    public void inviteTrip(Long trip_id, TripInviteRequest request) {
-        Trip trip = tripFinder.findByTripId(trip_id);
+    public void inviteTrip(Long tripId, TripInviteRequest request) {
+        Trip trip = tripFinder.findByTripId(tripId);
         User invitedUser = userFinder.findByNickname(request.nickname());
 
         boolean alreadyInvited = tripParticipantRepository
