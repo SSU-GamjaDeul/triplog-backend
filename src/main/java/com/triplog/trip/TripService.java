@@ -92,10 +92,17 @@ public class TripService {
     }
 
     @Transactional
-    public void inviteTrip(Long tripId, TripInviteRequest request) {
+    public void inviteTrip(String username, Long tripId, TripInviteRequest request) {
+        User user = userFinder.findByNickname(username);
         Trip trip = tripFinder.findByTripId(tripId);
         User invitedUser = userFinder.findByNickname(request.nickname());
 
+        // 자기 자신 초대 방지
+        if (user.equals(invitedUser)){
+           throw new CustomException(ErrorCode.CANNOT_INVITE_SELF);
+        }
+
+        // 이미 초대된 유저인지 확인
         boolean alreadyInvited = tripParticipantRepository
                 .existsByTripAndUser(trip, invitedUser);
 

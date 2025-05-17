@@ -45,8 +45,9 @@ public class TripController {
 
     @PostMapping("/trip/{tripId}/invite")
     @Operation(summary = "동반자 초대", description = "사용자의 닉네임으로 여행에 동반자를 초대합니다.")
-    public ResponseEntity<String> inviteTrip(@PathVariable Long tripId, @RequestBody @Valid TripInviteRequest request) {
-        tripService.inviteTrip(tripId, request);
+    public ResponseEntity<String> inviteTrip(@AuthenticationPrincipal CustomUserDetails userDetails, @PathVariable Long tripId, @RequestBody @Valid TripInviteRequest request) {
+        String username = userDetails.getUsername();
+        tripService.inviteTrip(username, tripId, request);
         return ResponseEntity.ok("동반자 초대 완료");
     }
 }
