@@ -34,5 +34,6 @@ public class TripParticipant extends BaseEntity {
     @JoinColumn(name = "trip_id")
     private Trip trip;
 
+    private String inviter;
     private boolean isAccepted;
 }

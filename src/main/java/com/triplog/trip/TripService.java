@@ -48,6 +48,7 @@ public class TripService {
         TripParticipant participant = TripParticipant.builder()
                 .user(user)
                 .trip(savedTrip)
+                .inviter(user.getNickname())
                 .isAccepted(true)
                 .build();
 
@@ -113,6 +114,7 @@ public class TripService {
         TripParticipant participant = TripParticipant.builder()
                 .user(invitedUser)
                 .trip(trip)
+                .inviter(user.getNickname())
                 .isAccepted(false)
                 .build();
 
