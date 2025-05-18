@@ -33,4 +33,7 @@ public class TripParticipant extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "trip_id")
     private Trip trip;
+
+    private String inviter;
+    private boolean isAccepted;
 }

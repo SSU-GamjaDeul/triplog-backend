@@ -1,8 +1,5 @@
 package com.triplog.trip;
-import com.triplog.trip.dto.TripCreateRequest;
-import com.triplog.trip.dto.TripCreateResponse;
-import com.triplog.trip.dto.TripDetailResponse;
-import com.triplog.trip.dto.TripFindByUserResponse;
+import com.triplog.trip.dto.*;
 import com.triplog.user.jwt.CustomUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -39,10 +36,18 @@ public class TripController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/trip/{trip_id}")
+    @PostMapping("/trip/{tripId}")
     @Operation(summary = "여행 상세 조회", description = "각 여행의 상세 정보를 조회합니다.")
-    public ResponseEntity<TripDetailResponse> getTripDetail(@PathVariable Long trip_id) {
-        TripDetailResponse response = tripService.getTripDetail(trip_id);
+    public ResponseEntity<TripDetailResponse> getTripDetail(@PathVariable Long tripId) {
+        TripDetailResponse response = tripService.getTripDetail(tripId);
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/trip/{tripId}/invite")
+    @Operation(summary = "동반자 초대", description = "사용자의 닉네임으로 여행에 동반자를 초대합니다.")
+    public ResponseEntity<String> inviteTrip(@AuthenticationPrincipal CustomUserDetails userDetails, @PathVariable Long tripId, @RequestBody @Valid TripInviteRequest request) {
+        String username = userDetails.getUsername();
+        tripService.inviteTrip(username, tripId, request);
+        return ResponseEntity.ok("동반자 초대 완료");
     }
 }
