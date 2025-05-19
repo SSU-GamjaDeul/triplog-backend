@@ -25,6 +25,7 @@ public enum ErrorCode {
 	ALREADY_INVITED(HttpStatus.CONFLICT, "이미 초대된 사용자입니다."),
 	CANNOT_INVITE_SELF(HttpStatus.BAD_REQUEST, "자기 자신을 초대할 수 없습니다."),
 	UNAUTHORIZED_ACCESS(HttpStatus.FORBIDDEN, "이 여행에 대해 초대할 권한이 없습니다."),
+	NO_PENDING_INVITES(HttpStatus.NOT_FOUND, "받은 초대가 없습니다."),
 
 	// Record
 	RECORD_NOT_FOUND(HttpStatus.NOT_FOUND,"기록 정보를 찾을 수 없습니다."),

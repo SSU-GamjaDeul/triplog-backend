@@ -50,4 +50,12 @@ public class TripController {
         tripService.inviteTrip(username, tripId, request);
         return ResponseEntity.ok("동반자 초대 완료");
     }
+
+    @GetMapping("/users/invite")
+    @Operation(summary = "여행 초대 조회", description = "사용자가 받은 여행 초대를 조회합니다.")
+    public ResponseEntity<TripInviteFindByUserResponse> getTripInvitesByUser(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        String username = userDetails.getUsername();
+        TripInviteFindByUserResponse response = tripService.getTripInvitesByUser(username);
+        return ResponseEntity.ok(response);
+    }
 }
