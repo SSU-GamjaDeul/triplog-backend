@@ -1,7 +1,7 @@
 package com.triplog.user.jwt;
 
 
-import com.triplog.user.dto.LoginRequestDto;
+import com.triplog.user.dto.LoginRequest;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -29,18 +29,18 @@ public class JwtUtil {
         this.accessTokenExpTime= accessTokenExpTime;
     }
 
-    public String createAccessToken(LoginRequestDto loginRequestDto){
+    public String createAccessToken(LoginRequest loginRequestDto){
         return createToken(loginRequestDto,accessTokenExpTime);
     }
 
     // JWT 토큰 생성
-    public String createToken(LoginRequestDto loginRequestDto,long expireTime) {
+    public String createToken(LoginRequest loginRequestDto, long expireTime) {
 
         ZonedDateTime now=ZonedDateTime.now();
         ZonedDateTime tokenValidity=now.plusSeconds(expireTime);
 
         return Jwts.builder()
-                .setSubject(loginRequestDto.getNickname())
+                .setSubject(loginRequestDto.nickname())
                 .setIssuedAt(Date.from(now.toInstant()))
                 .setExpiration(Date.from(tokenValidity.toInstant()))
                 .signWith(key, SignatureAlgorithm.HS256)
