@@ -140,4 +140,22 @@ public class TripService {
                 .tripInvites(responseItems)
                 .build();
     }
+
+    @Transactional
+    public void acceptInvite(String username, Long tripId) {
+        User user = userFinder.findByNickname(username);
+        Trip trip = tripFinder.findByTripId(tripId);
+
+        TripParticipant tripParticipant = tripParticipantRepository
+                .findByTripAndUser(trip, user)
+                        .orElseThrow(() -> new CustomException(ErrorCode.INVITE_NOT_FOUND));
+
+        if (tripParticipant.isAccepted()) {
+            throw new CustomException(ErrorCode.ALREADY_ACCEPTED);
+        }
+
+        tripParticipant.accept();
+
+        tripParticipantRepository.save(tripParticipant);
+    }
 }
