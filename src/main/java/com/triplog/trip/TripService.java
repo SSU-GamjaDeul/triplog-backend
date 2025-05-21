@@ -2,10 +2,7 @@ package com.triplog.trip;
 
 import com.triplog.common.exception.CustomException;
 import com.triplog.common.exception.ErrorCode;
-import com.triplog.record.domain.RecordTag;
-import com.triplog.trip.domain.Trip;
-import com.triplog.trip.domain.TripParticipant;
-import com.triplog.trip.domain.TripTag;
+import com.triplog.trip.domain.*;
 import com.triplog.trip.dto.*;
 import com.triplog.trip.repository.TripTagRepository;
 import com.triplog.user.domain.User;
@@ -128,5 +125,19 @@ public class TripService {
                 .build();
 
         tripParticipantRepository.save(invitedParticipant);
+    }
+
+    public TripInviteFindByUserResponse getTripInvitesByUser(String username) {
+        User user = userFinder.findByNickname(username);
+
+        List<TripParticipant> pendingList = tripParticipantRepository.findByUserAndIsAcceptedFalse(user);
+
+        List<TripInviteFindByUserResponse.Item> responseItems = pendingList.stream()
+                .map(TripInviteFindByUserResponse.Item::from)
+                .toList();
+
+        return TripInviteFindByUserResponse.builder()
+                .tripInvites(responseItems)
+                .build();
     }
 }
