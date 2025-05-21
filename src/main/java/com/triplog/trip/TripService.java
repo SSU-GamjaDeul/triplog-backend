@@ -132,10 +132,6 @@ public class TripService {
 
         List<TripParticipant> pendingList = tripParticipantRepository.findByUserAndIsAcceptedFalse(user);
 
-        if (pendingList.isEmpty()) {
-            throw new CustomException(ErrorCode.NO_PENDING_INVITES);
-        }
-
         List<TripInviteFindByUserResponse.Item> responseItems = pendingList.stream()
                 .map(TripInviteFindByUserResponse.Item::from)
                 .toList();
