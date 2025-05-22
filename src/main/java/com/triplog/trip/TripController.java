@@ -58,4 +58,12 @@ public class TripController {
         TripInviteFindByUserResponse response = tripService.getTripInvitesByUser(username);
         return ResponseEntity.ok(response);
     }
+
+    @PatchMapping("{tripId}/invite/accept")
+    @Operation(summary = "동반자 초대 수락", description = "사용자가 받은 여행 초대를 수락합니다.")
+    public ResponseEntity<String> acceptInvite(@AuthenticationPrincipal CustomUserDetails userDetails, @PathVariable Long tripId) {
+        String username = userDetails.getUsername();
+        tripService.acceptInvite(username, tripId);
+        return ResponseEntity.ok("초대 수락 완료");
+    }
 }
