@@ -155,7 +155,5 @@ public class TripService {
         }
 
         tripParticipant.accept();
-
-        tripParticipantRepository.save(tripParticipant);
     }
 }
