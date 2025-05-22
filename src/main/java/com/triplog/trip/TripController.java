@@ -52,7 +52,7 @@ public class TripController {
     }
 
     @GetMapping("/invite")
-    @Operation(summary = "여행 초대 조회", description = "사용자가 받은 여행 초대를 조회합니다.")
+    @Operation(summary = "동반자 초대 조회", description = "사용자가 받은 여행 초대를 조회합니다.")
     public ResponseEntity<TripInviteFindByUserResponse> getTripInvitesByUser(@AuthenticationPrincipal CustomUserDetails userDetails) {
         String username = userDetails.getUsername();
         TripInviteFindByUserResponse response = tripService.getTripInvitesByUser(username);
@@ -65,5 +65,13 @@ public class TripController {
         String username = userDetails.getUsername();
         tripService.acceptInvite(username, tripId);
         return ResponseEntity.ok("초대 수락 완료");
+    }
+
+    @DeleteMapping("{tripId}/invite/refuse")
+    @Operation(summary = "동반자 초대 거절", description = "사용자가 받은 여행 초대를 거절합니다.")
+    public ResponseEntity<String> refuseInvite(@AuthenticationPrincipal CustomUserDetails userDetails, @PathVariable Long tripId) {
+        String username = userDetails.getUsername();
+        tripService.refuseInvite(username, tripId);
+        return ResponseEntity.ok("초대 거절 완료");
     }
 }

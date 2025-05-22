@@ -156,4 +156,20 @@ public class TripService {
 
         tripParticipant.accept();
     }
+
+    @Transactional
+    public void refuseInvite(String username, Long tripId) {
+        User user = userFinder.findByNickname(username);
+        Trip trip = tripFinder.findByTripId(tripId);
+
+        TripParticipant tripParticipant = tripParticipantRepository
+                .findByTripAndUser(trip, user)
+                .orElseThrow(() -> new CustomException(ErrorCode.INVITE_NOT_FOUND));
+
+        if (tripParticipant.isAccepted()) {
+            throw new CustomException(ErrorCode.ALREADY_ACCEPTED);
+        }
+
+        tripParticipantRepository.delete(tripParticipant);
+    }
 }
