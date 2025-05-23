@@ -2,13 +2,7 @@ package com.triplog.user.domain;
 
 import com.triplog.common.domain.BaseEntity;
 import com.triplog.user.domain.enums.Gender;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,7 +21,10 @@ public class User extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String username;
+    @Embedded
+    private OauthInfo oauthInfo;
+
+    private String accessToken;
 
     private String nickname;
 
@@ -38,7 +35,14 @@ public class User extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
-    public void updateNickname(String nickname) {
+    public void updateProfile(String nickname, String birthYear, Gender gender) {
         this.nickname = nickname;
+        this.birthYear = birthYear;
+        this.gender = gender;
+    }
+
+    public User update(String accessToken){
+        this.accessToken = accessToken;
+        return this;
     }
 }
