@@ -22,46 +22,6 @@ public class UserService {
     private final UserVibeRepository userVibeRepository;
     private final JwtUtil jwtUtil;
 
-    // 회원가입
-    public boolean register(SignupRequest signupRequestDto) {
-        //이미 등록된 닉네임인 경우 에러처리
-        if(userRepository.existsByNickname(signupRequestDto.nickname())) {
-            throw new CustomException(ErrorCode.USER_NOT_FOUND);
-        }
-
-        //User 저장
-        User user=userRepository.save(User.builder()
-                .nickname(signupRequestDto.nickname())
-                        .birthYear(signupRequestDto.birthYear())
-                        .gender(signupRequestDto.gender())
-                .build());
-
-
-        // 선택된 모든 Vibe 저장
-        for (String vibeDesc : signupRequestDto.Vibe()) {
-            Vibe vibeEnum = Vibe.fromDescription(vibeDesc); // 한글 → enum 매핑
-
-            UserVibe userVibe = UserVibe.builder()
-                    .user(user)
-                    .vibe(vibeEnum)
-                    .build();
-
-            userVibeRepository.save(userVibe);
-        }
-
-        return true;
-
-    }
-
-    public String login(LoginRequest loginRequestDto) {
-        //등록되지 않은 user인 경우 에러 처리
-        if(!userRepository.existsByNickname(loginRequestDto.nickname())) {
-            throw new CustomException(ErrorCode.USER_NOT_FOUND);
-        }
-        String accessToken=jwtUtil.createAccessToken(loginRequestDto);
-        return accessToken;
-    }
-
     @Transactional
     public void updateProfile(String nickname, UpdateProfileRequest updateProfileRequestDto) {
         User user=userRepository.findByNickname(nickname)

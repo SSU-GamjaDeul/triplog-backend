@@ -19,6 +19,7 @@ public enum ErrorCode {
 	// User
 	USER_NOT_FOUND(HttpStatus.NOT_FOUND, "사용자의 정보를 찾을 수 없습니다."),
 	DUPLICATE_USER(HttpStatus.CONFLICT,"존재하는 닉네임 입니다."),
+	ALREADY_REGISTERED(HttpStatus.CONFLICT, "이미 등록된 사용자입니다."),
 
 	// Trip
 	TRIP_NOT_FOUND(HttpStatus.NOT_FOUND, "여행 정보를 찾을 수 없습니다."),

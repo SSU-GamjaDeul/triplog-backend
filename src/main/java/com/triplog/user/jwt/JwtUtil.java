@@ -29,18 +29,18 @@ public class JwtUtil {
         this.accessTokenExpTime= accessTokenExpTime;
     }
 
-    public String createAccessToken(LoginRequest loginRequestDto){
-        return createToken(loginRequestDto,accessTokenExpTime);
+    public String createAccessToken(String nickname) {
+        return createToken(nickname,accessTokenExpTime);
     }
 
     // JWT 토큰 생성
-    public String createToken(LoginRequest loginRequestDto, long expireTime) {
+    public String createToken(String nickname, long expireTime) {
 
         ZonedDateTime now=ZonedDateTime.now();
         ZonedDateTime tokenValidity=now.plusSeconds(expireTime);
 
         return Jwts.builder()
-                .setSubject(loginRequestDto.nickname())
+                .setSubject(nickname)
                 .setIssuedAt(Date.from(now.toInstant()))
                 .setExpiration(Date.from(tokenValidity.toInstant()))
                 .signWith(key, SignatureAlgorithm.HS256)
@@ -55,6 +55,7 @@ public class JwtUtil {
                 .getBody()
                 .getSubject();
     }
+
 
     // 토큰 정보를 검증하는 메서드
     public boolean validateToken(String token) {

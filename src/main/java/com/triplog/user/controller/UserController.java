@@ -22,27 +22,12 @@ public class UserController {
     private final UserService userService;
     private final JwtUtil jwtUtil;
 
-    @PostMapping("/signup")
-    @Operation(summary = "회원가입", description = "유저의 닉네임과 분위기의 리스트를 받아 회원가입을 합니다.")
-    public ResponseEntity<String> signup(@RequestBody SignupRequest request) {
-        userService.register(request);
-        return ResponseEntity.ok("회원가입 성공");
-    }
-
-    @PostMapping("/login")
-    @Operation(summary = "로그인", description = "유저의 닉네임을 입력받아 액세스 토큰을 발급받습니다.")
-    public ResponseEntity<JwtToken> login(@RequestBody LoginRequest request) {
-        String token = userService.login(request);
-        return ResponseEntity.ok(JwtToken.builder().accessToken(token).build());
-    }
-
     @PatchMapping("/users")
     @Operation(summary = "회원 정보 수정", description = "유저의 닉네임 또는 분위기를 수정할 수 있습니다.")
     public ResponseEntity<String> updateProfile(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody UpdateProfileRequest dto) {
         String nickname = userDetails.getUsername();
         userService.updateProfile(nickname,dto);
         return ResponseEntity.ok("회원 정보가 수정되었습니다.");
-
     }
 
     @GetMapping("/check-nickname")
