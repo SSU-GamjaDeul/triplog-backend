@@ -141,6 +141,7 @@ public class RecordService {
 
         List<Place> places = placeFinder.findAllByLatitudeAndLongitudeAndCategory(minLat, maxLat, minLng, maxLng, categories);
 
+        // 본인이 작성한 기록들을 조회하고 있음. -> 이렇게 말고, 본인이 속해있는 여행과 그 안의 기록들을 조회하는 것.
         List<Record> records = recordRepository.findAllByUserAndPlaceIn(user, places);
 
         List<RecordFindAllByLocationResponse.Item> responseList = records.stream()
