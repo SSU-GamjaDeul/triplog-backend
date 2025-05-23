@@ -36,4 +36,8 @@ public class TripParticipant extends BaseEntity {
 
     private String inviter;
     private boolean isAccepted;
+
+    public void accept() {
+        this.isAccepted = true;
+    }
 }
