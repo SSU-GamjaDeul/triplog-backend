@@ -1,3 +1,4 @@
-FROM eclipse-temurin:21-jdk-alpine
-COPY ./build/libs/*SNAPSHOT.jar project.jar
-ENTRYPOINT ["java", "-jar", "project.jar"]
+FROM openjdk:21-jdk-slim
+COPY build/libs/*SNAPSHOT.jar app.jar
+EXPOSE 8080
+ENTRYPOINT ["java", "-jar", "/app.jar"]
