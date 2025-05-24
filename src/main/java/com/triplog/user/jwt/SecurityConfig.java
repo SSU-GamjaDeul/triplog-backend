@@ -1,15 +1,10 @@
 package com.triplog.user.jwt;
 
-
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.filter.CorsFilter;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -45,11 +40,11 @@ public class SecurityConfig {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
         config.setAllowedOrigins(List.of(
-                "http://localhost:33000",
+                "http://localhost:3000",
                 "https://triplog.store",
                 "https://triplog-bucket.s3.ap-northeast-2.amazonaws.com"
         ));
-        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE","OPTIONS"));
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE","OPTIONS", "PATCH"));
         config.setAllowedHeaders(List.of("*"));
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -57,4 +52,8 @@ public class SecurityConfig {
         return source;
     }
 
+    @Bean
+    public CorsFilter corsFilter() {
+        return new CorsFilter(corsConfiguration());
+    }
 }
