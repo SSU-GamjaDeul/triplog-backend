@@ -44,9 +44,11 @@ public class SecurityConfig {
     public UrlBasedCorsConfigurationSource corsConfiguration() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.setAllowedOrigins(List.of("http://localhost:3000"));
-        config.setAllowedOrigins(List.of("https://triplog.store"));
-        config.setAllowedOrigins(List.of("https://triplog-bucket.s3.ap-northeast-2.amazonaws.com"));
+        config.setAllowedOrigins(List.of(
+                "http://localhost:33000",
+                "https://triplog.store",
+                "https://triplog-bucket.s3.ap-northeast-2.amazonaws.com"
+        ));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE","OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
 
