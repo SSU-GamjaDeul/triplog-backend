@@ -2,6 +2,7 @@ package com.triplog.trip;
 
 import com.triplog.common.exception.CustomException;
 import com.triplog.common.exception.ErrorCode;
+import com.triplog.record.domain.RecordTag;
 import com.triplog.trip.domain.*;
 import com.triplog.trip.dto.*;
 import com.triplog.trip.repository.TripTagRepository;
@@ -13,6 +14,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
 import java.util.List;
 
 @Slf4j
@@ -172,5 +175,32 @@ public class TripService {
         }
 
         tripParticipantRepository.delete(tripParticipant);
+    }
+
+    @Transactional
+    public void updateTrip(String username, Long tripId, TripUpdateRequest request) {
+        User user = userFinder.findByNickname(username);
+        Trip trip = tripFinder.findByTripId(tripId);
+
+        tripParticipantRepository.findByTripAndUserAndIsAcceptedTrue(trip, user)
+                .orElseThrow(() -> new CustomException(ErrorCode.UNAUTHORIZED_ACCESS));
+
+        trip.update(request.title(),
+                request.memo(),
+                request.isPublic(),
+                request.startDate(),
+                request.endDate());
+
+        tripTagRepository.deleteAllByTrip(trip);
+        List<String> newTags = request.tags();
+        if (newTags != null) {
+            for (String newContent : newTags) {
+                TripTag tripTag = TripTag.builder()
+                        .trip(trip)
+                        .content(newContent)
+                        .build();
+                tripTagRepository.save(tripTag);
+            }
+        }
     }
 }

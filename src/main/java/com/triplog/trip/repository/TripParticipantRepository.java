@@ -14,4 +14,5 @@ public interface TripParticipantRepository extends JpaRepository<TripParticipant
     Optional<TripParticipant> findByTripAndUser(Trip trip, User user);
     List<TripParticipant> findByUserAndIsAcceptedFalse(User user);
     List<TripParticipant> findByTripAndIsAcceptedTrue(Trip trip);
+    Optional<TripParticipant> findByTripAndUserAndIsAcceptedTrue(Trip trip, User user);
 }

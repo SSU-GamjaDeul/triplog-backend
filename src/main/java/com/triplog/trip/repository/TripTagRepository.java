@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface TripTagRepository extends JpaRepository<TripTag, Long> {
     List<TripTag> findByTrip(Trip trip);
+    void deleteAllByTrip(Trip trip);
 }

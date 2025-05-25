@@ -35,4 +35,12 @@ public class Trip extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
+    public void update(String title, String memo, boolean isPublic, LocalDate startDate, LocalDate endDate) {
+        this.title = title;
+        this.memo = memo;
+        this.isPublic = isPublic;
+        this.startDate = startDate;
+        this.endDate = endDate;
+    }
 }
