@@ -83,4 +83,12 @@ public class TripController {
         tripService.updateTrip(username, tripId, request);
         return ResponseEntity.ok("여행 수정 완료");
     }
+
+    @DeleteMapping("{tripId}")
+    @Operation(summary = "여행 삭제", description = "각 여행을 삭제합니다.")
+    public ResponseEntity<String> deleteTrip(@AuthenticationPrincipal CustomUserDetails userDetails, @PathVariable Long tripId) {
+        String username = userDetails.getUsername();
+        tripService.deleteTrip(username, tripId);
+        return ResponseEntity.ok("여행 삭제 완료");
+    }
 }

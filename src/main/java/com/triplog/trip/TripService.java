@@ -192,4 +192,21 @@ public class TripService {
             }
         }
     }
+
+    @Transactional
+    public void deleteTrip(String username, Long tripId) {
+        User user = userFinder.findByNickname(username);
+        Trip trip = tripFinder.findByTripId(tripId);
+
+        // 유저가 여행 생성자인지 확인
+        if (!trip.getUser().equals(user)) {
+            throw new CustomException(ErrorCode.UNAUTHORIZED_ACCESS);
+        }
+
+        List<TripParticipant> participants = tripParticipantRepository.findByTrip(trip);
+
+        tripParticipantRepository.deleteAll(participants);
+        tripTagRepository.deleteAllByTrip(trip);
+        tripRepository.delete(trip);
+    }
 }
