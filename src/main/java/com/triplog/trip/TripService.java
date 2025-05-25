@@ -2,20 +2,15 @@ package com.triplog.trip;
 
 import com.triplog.common.exception.CustomException;
 import com.triplog.common.exception.ErrorCode;
-import com.triplog.record.domain.RecordTag;
 import com.triplog.trip.domain.*;
 import com.triplog.trip.dto.*;
-import com.triplog.trip.repository.TripTagRepository;
+import com.triplog.trip.repository.*;
 import com.triplog.user.domain.User;
-import com.triplog.trip.repository.TripParticipantRepository;
-import com.triplog.trip.repository.TripRepository;
 import com.triplog.user.UserFinder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDate;
 import java.util.List;
 
 @Slf4j
@@ -100,14 +95,8 @@ public class TripService {
         User invitedUser = userFinder.findByNickname(request.nickname());
 
         // 현재 로그인한 유저가 여행 참여자인지 확인
-        TripParticipant requesterParticipant = tripParticipantRepository
-                .findByTripAndUser(trip, user)
+        tripParticipantRepository.findByTripAndUserAndIsAcceptedTrue(trip, user)
                 .orElseThrow(() -> new CustomException(ErrorCode.UNAUTHORIZED_ACCESS));
-
-        boolean isAcceptedParticipant = requesterParticipant.isAccepted();
-        if (!isAcceptedParticipant){
-            throw new CustomException(ErrorCode.UNAUTHORIZED_ACCESS);
-        }
 
         // 자기 자신 초대 방지
         if (user.equals(invitedUser)){
