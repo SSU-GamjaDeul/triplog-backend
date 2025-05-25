@@ -1,6 +1,7 @@
 package com.triplog.trip.dto;
 
 import com.triplog.trip.domain.Trip;
+import com.triplog.trip.domain.TripParticipant;
 import com.triplog.trip.domain.TripTag;
 import lombok.Builder;
 
@@ -15,11 +16,17 @@ public record TripDetailResponse(
         boolean isPublic,
         LocalDate startDate,
         LocalDate endDate,
-        List<String> tags) {
-    public static TripDetailResponse from(Trip trip, List <TripTag> tags){
+        List<String> tags,
+        List<String> participants ) {
+    public static TripDetailResponse from(Trip trip, List <TripTag> tags, List<TripParticipant> participants ){
         List<String> tagList = tags.stream()
                 .map(TripTag::getContent)
                 .toList();
+
+        List<String> participantList = participants.stream()
+                .map(p -> p.getUser().getNickname())
+                .toList();
+
         return TripDetailResponse.builder()
                 .tripId(trip.getId())
                 .title(trip.getTitle())
@@ -28,6 +35,7 @@ public record TripDetailResponse(
                 .startDate(trip.getStartDate())
                 .endDate(trip.getEndDate())
                 .tags(tagList)
+                .participants(participantList)
                 .build();
     }
 }

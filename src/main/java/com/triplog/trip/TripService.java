@@ -86,7 +86,8 @@ public class TripService {
     public TripDetailResponse getTripDetail(Long tripId) {
         Trip trip = tripFinder.findByTripId(tripId);
         List<TripTag> tags = tripTagRepository.findByTrip(trip);
-        return TripDetailResponse.from(trip, tags);
+        List<TripParticipant> participants = tripParticipantRepository.findByTripAndIsAcceptedTrue(trip);
+        return TripDetailResponse.from(trip, tags, participants);
     }
 
     @Transactional
