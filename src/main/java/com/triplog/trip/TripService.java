@@ -2,6 +2,7 @@ package com.triplog.trip;
 
 import com.triplog.common.exception.CustomException;
 import com.triplog.common.exception.ErrorCode;
+import com.triplog.record.repository.RecordImageRepository;
 import com.triplog.trip.domain.*;
 import com.triplog.trip.dto.*;
 import com.triplog.trip.repository.*;
@@ -23,7 +24,7 @@ public class TripService {
     private final TripTagRepository tripTagRepository;
     private final UserFinder userFinder;
     private final TripFinder tripFinder;
-
+    private final RecordImageRepository recordImageRepository;
 
     @Transactional
     public TripCreateResponse createTrip(TripCreateRequest request, String username) {
@@ -66,13 +67,14 @@ public class TripService {
     public TripFindByUserResponse getTripsByUser(String username) {
         User user = userFinder.findByNickname(username);
 
-        List<TripParticipant> participationList = tripParticipantRepository.findByUser(user);
+        List<TripParticipant> participationList = tripParticipantRepository.findByUserAndIsAcceptedTrue(user);
 
         List<TripFindByUserResponse.Item> responseItems = participationList.stream()
                 .map(participant -> {
                     Trip trip = participant.getTrip();
                     List<TripTag> tags = tripTagRepository.findByTrip(trip);
-                    return TripFindByUserResponse.Item.from(trip, tags);
+                    List<String> imgUrls = recordImageRepository.findImageUrlsByTrip(trip);
+                    return TripFindByUserResponse.Item.from(trip, tags, imgUrls);
                 })
                 .toList();
 
