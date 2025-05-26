@@ -24,10 +24,10 @@ public class RecordController {
     private final RecordService recordService;
 
     @GetMapping("/place")
-    @Operation(hidden = true, summary = "장소 기반 기록 목록 조회", description = "카카오 장소 id를 기반으로 해당 장소에 대한 모든 유저의 공개된 기록 목록을 조회합니다.")
-    public ResponseEntity<RecordFindAllByPlaceResponse> getRecordsByPlace(@RequestParam Long kakaoPlaceId) {
-
-        RecordFindAllByPlaceResponse response = recordService.getRecordsByPlace(kakaoPlaceId);
+    @Operation(summary = "장소 기반 기록 목록 조회", description = "카카오 장소 id를 기반으로 해당 장소에 대한 모든 유저의 공개된 기록 목록을 조회합니다.")
+    public ResponseEntity<RecordFindAllByPlaceResponse> getRecordsByPlace(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestParam Long kakaoPlaceId) {
+        String nickname = userDetails.getUsername();
+        RecordFindAllByPlaceResponse response = recordService.getRecordsByPlace(nickname, kakaoPlaceId);
 
         return ResponseEntity.ok(response);
     }

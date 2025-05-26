@@ -17,6 +17,8 @@ public record RecordFindAllByPlaceResponse(
     public record Item(
             @Schema(description = "기록 id", nullable = false, example = "1")
             Long recordId,
+            @Schema(description = "나의 기록 여부", example = "true")
+            boolean isMyTripRecord,
             @Schema(description = "제목", nullable = false, example = "...")
             String title,
             @Schema(description = "날짜", nullable = false, example = "2025.06.20")
@@ -27,7 +29,7 @@ public record RecordFindAllByPlaceResponse(
             )
             List<String> tag
     ) {
-        public static Item from(Record record, List<RecordTag> tags) {
+        public static Item from(Record record, List<RecordTag> tags, boolean isMyTripRecord) {
             List<String> tagContents = tags.stream()
                     .map(RecordTag::getContent)
                     .toList();
@@ -39,6 +41,7 @@ public record RecordFindAllByPlaceResponse(
                     .title(record.getTitle())
                     .date(formattedDate)
                     .tag(tagContents)
+                    .isMyTripRecord(isMyTripRecord)
                     .build();
         }
     }

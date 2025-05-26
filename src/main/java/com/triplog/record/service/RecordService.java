@@ -12,7 +12,9 @@ import com.triplog.record.repository.RecordImageRepository;
 import com.triplog.record.repository.RecordRepository;
 import com.triplog.record.repository.RecordTagRepository;
 import com.triplog.trip.TripFinder;
+import com.triplog.trip.TripParticipantFinder;
 import com.triplog.trip.domain.Trip;
+import com.triplog.trip.domain.TripParticipant;
 import com.triplog.user.UserFinder;
 import com.triplog.user.domain.User;
 import lombok.RequiredArgsConstructor;
@@ -35,16 +37,25 @@ public class RecordService {
     private final UserFinder userFinder;
     private final TripFinder tripFinder;
     private final RecordFinder recordFinder;
+    private final TripParticipantFinder tripParticipantFinder;
 
-    public RecordFindAllByPlaceResponse getRecordsByPlace(Long kakaoPlaceId) {
+    public RecordFindAllByPlaceResponse getRecordsByPlace(String nickname, Long kakaoPlaceId) {
 
+        User user = userFinder.findByNickname(nickname);
         Place place = placeFinder.findByKakaoPlaceId(kakaoPlaceId);
         List<Record> records = recordRepository.findAllByPlaceAndIsPublicTrueOrderByDateDesc(place);
+
+        // 사용자가 참여 중인 Trip 목록 조회
+        List<Trip> myTrips = tripParticipantFinder.findAllByUser(user)
+                .stream()
+                .map(TripParticipant::getTrip)
+                .toList();
 
         List<RecordFindAllByPlaceResponse.Item> responseList = records.stream()
                 .map(record -> {
                     List<RecordTag> tags = recordTagRepository.findAllByRecord(record);
-                    return RecordFindAllByPlaceResponse.Item.from(record, tags);
+                    boolean isMyTripRecord = myTrips.contains(record.getTrip());
+                    return RecordFindAllByPlaceResponse.Item.from(record, tags, isMyTripRecord);
                 })
                 .toList();
 
