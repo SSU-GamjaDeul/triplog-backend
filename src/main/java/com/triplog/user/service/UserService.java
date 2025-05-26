@@ -2,10 +2,12 @@ package com.triplog.user.service;
 
 import com.triplog.common.exception.CustomException;
 import com.triplog.common.exception.ErrorCode;
+import com.triplog.user.UserFinder;
 import com.triplog.user.domain.User;
 import com.triplog.user.domain.UserVibe;
 import com.triplog.user.domain.enums.Vibe;
 import com.triplog.user.dto.LoginRequest;
+import com.triplog.user.dto.ProfileResponse;
 import com.triplog.user.dto.SignupRequest;
 import com.triplog.user.dto.UpdateProfileRequest;
 import com.triplog.user.jwt.JwtUtil;
@@ -21,6 +23,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserVibeRepository userVibeRepository;
     private final JwtUtil jwtUtil;
+    private final UserFinder userFinder;
 
     @Transactional
     public void updateProfile(String nickname, UpdateProfileRequest updateProfileRequestDto) {
@@ -50,5 +53,16 @@ public class UserService {
 
     public void checkNickname(String nickname) {
         if(userRepository.findByNickname(nickname).isPresent()) throw new CustomException(ErrorCode.DUPLICATE_USER);
+    }
+
+    public ProfileResponse getProfile(String nickname) {
+        User user=userFinder.findByNickname(nickname);
+        ProfileResponse profileResponse=ProfileResponse.builder()
+                .nickname(nickname)
+                .email(user.getEmail())
+                .birthYear(user.getBirthYear())
+                .gender(user.getGender().toString())
+                .build();
+        return profileResponse;
     }
 }

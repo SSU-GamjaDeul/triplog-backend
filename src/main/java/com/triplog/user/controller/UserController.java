@@ -1,6 +1,8 @@
 package com.triplog.user.controller;
 
+import com.triplog.user.domain.User;
 import com.triplog.user.dto.LoginRequest;
+import com.triplog.user.dto.ProfileResponse;
 import com.triplog.user.dto.SignupRequest;
 import com.triplog.user.dto.UpdateProfileRequest;
 import com.triplog.user.jwt.CustomUserDetails;
@@ -35,6 +37,14 @@ public class UserController {
     public ResponseEntity<?> checkNickname(@RequestParam String nickname) {
         userService.checkNickname(nickname);
         return ResponseEntity.ok("사용가능한 닉네임입니다.");
+    }
+
+    @GetMapping("/users")
+    @Operation(summary = "내 정보 가져오기", description = "해당 유저의 프로필 정보를 가져옵니다.")
+    public ResponseEntity<ProfileResponse> getProfile(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        String nickname=userDetails.getUsername();
+        ProfileResponse user= userService.getProfile(nickname);
+        return ResponseEntity.ok(user);
     }
 
 }
