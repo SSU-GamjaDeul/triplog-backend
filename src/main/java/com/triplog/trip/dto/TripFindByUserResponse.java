@@ -15,9 +15,10 @@ public record TripFindByUserResponse (List<Item> trips) {
             String title,
             LocalDate startDate,
             LocalDate endDate,
-            List<String> tags
+            List<String> tags,
+            List<String> imgUrls
     ) {
-        public static Item from(Trip trip, List<TripTag> tags) {
+        public static Item from(Trip trip, List<TripTag> tags, List<String> imgUrls) {
             List<String> tagList = tags.stream()
                     .map(TripTag::getContent)
                     .toList();
@@ -28,6 +29,7 @@ public record TripFindByUserResponse (List<Item> trips) {
                     .startDate(trip.getStartDate())
                     .endDate(trip.getEndDate())
                     .tags(tagList)
+                    .imgUrls(imgUrls)
                     .build();
         }
     }
