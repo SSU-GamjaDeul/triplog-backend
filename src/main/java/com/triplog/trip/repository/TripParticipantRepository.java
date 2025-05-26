@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface TripParticipantRepository extends JpaRepository<TripParticipant, Long> {
-    List<TripParticipant> findByUser(User user);
+    List<TripParticipant> findByUserAndIsAcceptedTrue(User user);
     boolean existsByTripAndUser(Trip trip, User user);
     Optional<TripParticipant> findByTripAndUser(Trip trip, User user);
     List<TripParticipant> findByUserAndIsAcceptedFalse(User user);

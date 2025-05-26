@@ -67,7 +67,7 @@ public class TripService {
     public TripFindByUserResponse getTripsByUser(String username) {
         User user = userFinder.findByNickname(username);
 
-        List<TripParticipant> participationList = tripParticipantRepository.findByUser(user);
+        List<TripParticipant> participationList = tripParticipantRepository.findByUserAndIsAcceptedTrue(user);
 
         List<TripFindByUserResponse.Item> responseItems = participationList.stream()
                 .map(participant -> {
