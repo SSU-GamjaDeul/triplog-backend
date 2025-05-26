@@ -4,10 +4,8 @@ import com.triplog.common.exception.CustomException;
 import com.triplog.common.exception.ErrorCode;
 import com.triplog.trip.domain.*;
 import com.triplog.trip.dto.*;
-import com.triplog.trip.repository.TripTagRepository;
+import com.triplog.trip.repository.*;
 import com.triplog.user.domain.User;
-import com.triplog.trip.repository.TripParticipantRepository;
-import com.triplog.trip.repository.TripRepository;
 import com.triplog.user.UserFinder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -97,14 +95,8 @@ public class TripService {
         User invitedUser = userFinder.findByNickname(request.nickname());
 
         // 현재 로그인한 유저가 여행 참여자인지 확인
-        TripParticipant requesterParticipant = tripParticipantRepository
-                .findByTripAndUser(trip, user)
+        tripParticipantRepository.findByTripAndUserAndIsAcceptedTrue(trip, user)
                 .orElseThrow(() -> new CustomException(ErrorCode.UNAUTHORIZED_ACCESS));
-
-        boolean isAcceptedParticipant = requesterParticipant.isAccepted();
-        if (!isAcceptedParticipant){
-            throw new CustomException(ErrorCode.UNAUTHORIZED_ACCESS);
-        }
 
         // 자기 자신 초대 방지
         if (user.equals(invitedUser)){
@@ -172,5 +164,49 @@ public class TripService {
         }
 
         tripParticipantRepository.delete(tripParticipant);
+    }
+
+    @Transactional
+    public void updateTrip(String username, Long tripId, TripUpdateRequest request) {
+        User user = userFinder.findByNickname(username);
+        Trip trip = tripFinder.findByTripId(tripId);
+
+        tripParticipantRepository.findByTripAndUserAndIsAcceptedTrue(trip, user)
+                .orElseThrow(() -> new CustomException(ErrorCode.UNAUTHORIZED_ACCESS));
+
+        trip.update(request.title(),
+                request.memo(),
+                request.isPublic(),
+                request.startDate(),
+                request.endDate());
+
+        tripTagRepository.deleteAllByTrip(trip);
+        List<String> newTags = request.tags();
+        if (newTags != null) {
+            for (String newContent : newTags) {
+                TripTag tripTag = TripTag.builder()
+                        .trip(trip)
+                        .content(newContent)
+                        .build();
+                tripTagRepository.save(tripTag);
+            }
+        }
+    }
+
+    @Transactional
+    public void deleteTrip(String username, Long tripId) {
+        User user = userFinder.findByNickname(username);
+        Trip trip = tripFinder.findByTripId(tripId);
+
+        // 유저가 여행 생성자인지 확인
+        if (!trip.getUser().equals(user)) {
+            throw new CustomException(ErrorCode.UNAUTHORIZED_ACCESS);
+        }
+
+        List<TripParticipant> participants = tripParticipantRepository.findByTrip(trip);
+
+        tripParticipantRepository.deleteAll(participants);
+        tripTagRepository.deleteAllByTrip(trip);
+        tripRepository.delete(trip);
     }
 }
