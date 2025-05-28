@@ -35,8 +35,7 @@ public class User extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
-    public void updateProfile(String nickname, String birthYear, Gender gender) {
-        this.nickname = nickname;
+    public void updateProfile(String birthYear, Gender gender) {
         this.birthYear = birthYear;
         this.gender = gender;
     }

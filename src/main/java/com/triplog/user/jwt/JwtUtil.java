@@ -13,6 +13,8 @@ import org.springframework.stereotype.Component;
 import java.security.Key;
 import java.sql.Date;
 import java.time.ZonedDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 @Slf4j
 @Component
@@ -36,11 +38,16 @@ public class JwtUtil {
     // JWT 토큰 생성
     public String createToken(String nickname, long expireTime) {
 
+        Map<String, Object> header=new HashMap<>();
+        header.put("typ","JWT");
+        header.put("alg","HS256");
+
         ZonedDateTime now=ZonedDateTime.now();
         ZonedDateTime tokenValidity=now.plusSeconds(expireTime);
 
         return Jwts.builder()
                 .setSubject(nickname)
+                .setHeader(header)
                 .setIssuedAt(Date.from(now.toInstant()))
                 .setExpiration(Date.from(tokenValidity.toInstant()))
                 .signWith(key, SignatureAlgorithm.HS256)
