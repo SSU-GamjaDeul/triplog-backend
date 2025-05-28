@@ -1,5 +1,6 @@
 package com.triplog.bookmark.controller;
 
+import com.triplog.bookmark.dto.BookmarkCheckResponse;
 import com.triplog.bookmark.dto.BookmarkFindAllByLocationResponse;
 import com.triplog.bookmark.service.BookmarkService;
 import com.triplog.bookmark.dto.BookmarkDeleteRequest;
@@ -28,6 +29,17 @@ import org.springframework.web.bind.annotation.RestController;
 public class BookmarkController {
 
     private final BookmarkService bookmarkService;
+
+    @GetMapping
+    @Operation(summary = "북마크 유무 확인", description = "카카오 장소 id를 기반으로 해당 장소에 대한 북마크 유무를 조회합니다.")
+    public ResponseEntity<BookmarkCheckResponse> checkisBookmarked(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                                   @RequestParam Long kakaoPlaceId) {
+
+        String nickname = userDetails.getUsername();
+        BookmarkCheckResponse response = bookmarkService.checkIsBookmarked(nickname, kakaoPlaceId);
+
+        return ResponseEntity.ok(response);
+    }
 
     @PostMapping
     @Operation(summary = "북마크 생성", description = "카카오 장소 id를 기반으로 해당 장소에 대한 북마크를 생성합니다.")
