@@ -6,7 +6,6 @@ import lombok.Getter;
 import java.util.List;
 
 public record UpdateProfileRequest(
-        String nickname,
         String birthYear,
         Gender gender,
         List<String> vibe

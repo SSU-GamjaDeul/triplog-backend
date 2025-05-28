@@ -27,16 +27,10 @@ public class UserService {
 
     @Transactional
     public void updateProfile(String nickname, UpdateProfileRequest updateProfileRequestDto) {
-        User user=userRepository.findByNickname(nickname)
+        User user = userRepository.findByNickname(nickname)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
-        if(updateProfileRequestDto.nickname()!=null && !updateProfileRequestDto.nickname().equals(nickname)) {
-            if(userRepository.existsByNickname(updateProfileRequestDto.nickname())) {
-                throw new CustomException(ErrorCode.DUPLICATE_USER);
-            }
-            user.updateProfile(updateProfileRequestDto.nickname(), updateProfileRequestDto.birthYear(), updateProfileRequestDto.gender());
-        }
-
+        user.updateProfile(updateProfileRequestDto.birthYear(), updateProfileRequestDto.gender());
         if(updateProfileRequestDto.vibe()!=null && !updateProfileRequestDto.vibe().isEmpty()) {
             userVibeRepository.deleteAllByUser(user);
 
