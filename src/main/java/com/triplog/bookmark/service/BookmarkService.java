@@ -1,6 +1,7 @@
 package com.triplog.bookmark.service;
 
 import com.triplog.bookmark.domain.Bookmark;
+import com.triplog.bookmark.dto.BookmarkCheckResponse;
 import com.triplog.bookmark.dto.BookmarkDeleteRequest;
 import com.triplog.bookmark.dto.BookmarkFindAllByLocationResponse;
 import com.triplog.bookmark.dto.BookmarkSaveRequest;
@@ -27,6 +28,17 @@ public class BookmarkService {
     private final BookmarkRepository bookmarkRepository;
     private final PlaceFinder placeFinder;
     private final UserFinder userFinder;
+
+    @Transactional
+    public BookmarkCheckResponse checkIsBookmarked(String nickname, Long kakaoPlaceId) {
+
+        User user = userFinder.findByNickname(nickname);
+        Place place = placeFinder.findByKakaoPlaceId(kakaoPlaceId);
+
+        return BookmarkCheckResponse.builder()
+                .isBookmarked(bookmarkRepository.existsByUserAndPlace(user, place))
+                .build();
+    }
 
     @Transactional
     public void save(String nickname, BookmarkSaveRequest request) {

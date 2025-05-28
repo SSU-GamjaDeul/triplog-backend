@@ -15,8 +15,8 @@ public interface RecordRepository extends JpaRepository<Record, Long> {
 
     List<Record> findAllByPlaceAndIsPublicTrueOrderByDateDesc(Place place);
 
-    @Query("SELECT r FROM Record r JOIN FETCH r.place WHERE r.user = :user AND r.place IN :places")
-    List<Record> findAllByUserAndPlaceIn(User user, List<Place> places);
+    @Query("SELECT r FROM Record r JOIN FETCH r.place WHERE r.trip IN :trips AND r.place IN :places")
+    List<Record> findAllByTripInAndPlaceIn(List<Trip> trips, List<Place> places);
 
     Optional<Record> findById(Long id);
 
