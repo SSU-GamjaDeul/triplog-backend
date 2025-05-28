@@ -55,7 +55,7 @@ public class RecordController {
     }
 
     @GetMapping("/location")
-    @Operation(hidden = true, summary = "위치 기반 기록 목록 조회 (카테고리 필터 포함)", description = "위도·경도 범위와 선택한 카테고리에 해당하는 장소들을 기준으로 사용자의 기록 목록을 조회합니다.")
+    @Operation(summary = "위치 기반 기록 목록 조회 (카테고리 필터 포함)", description = "위도·경도 범위와 선택한 카테고리에 해당하는 장소들을 기준으로 사용자의 기록 목록을 조회합니다.")
     public ResponseEntity<RecordFindAllByLocationResponse> getRecordsByLocation(@AuthenticationPrincipal CustomUserDetails userDetails,
                                                                                 @RequestParam double minLat,
                                                                                 @RequestParam double maxLat,

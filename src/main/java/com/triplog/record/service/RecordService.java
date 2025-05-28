@@ -46,7 +46,7 @@ public class RecordService {
         List<Record> records = recordRepository.findAllByPlaceAndIsPublicTrueOrderByDateDesc(place);
 
         // 사용자가 참여 중인 Trip 목록 조회
-        List<Trip> myTrips = tripParticipantFinder.findAllByUser(user)
+        List<Trip> myTrips = tripParticipantFinder.findAllByUserAndIsAcceptedTrue(user)
                 .stream()
                 .map(TripParticipant::getTrip)
                 .toList();
@@ -150,10 +150,17 @@ public class RecordService {
 
         User user = userFinder.findByNickname(nickname);
 
+        // 1. 사용자가 참여한 Trip 목록 조회
+        List<Trip> myTrips = tripParticipantFinder.findAllByUserAndIsAcceptedTrue(user)
+                .stream()
+                .map(TripParticipant::getTrip)
+                .toList();
+
+        // 2. 위경도 + 카테고리 조건을 만족하는 장소 조회
         List<Place> places = placeFinder.findAllByLatitudeAndLongitudeAndCategory(minLat, maxLat, minLng, maxLng, categories);
 
-        // 본인이 작성한 기록들을 조회하고 있음. -> 이렇게 말고, 본인이 속해있는 여행과 그 안의 기록들을 조회하는 것.
-        List<Record> records = recordRepository.findAllByUserAndPlaceIn(user, places);
+        // 3. Trip과 Place 조건을 만족하는 기록들 조회
+        List<Record> records = recordRepository.findAllByTripInAndPlaceIn(myTrips, places);
 
         List<RecordFindAllByLocationResponse.Item> responseList = records.stream()
                 .map(RecordFindAllByLocationResponse.Item::from)
