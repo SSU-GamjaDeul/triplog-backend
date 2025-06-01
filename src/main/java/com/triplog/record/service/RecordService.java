@@ -13,6 +13,7 @@ import com.triplog.record.repository.RecordRepository;
 import com.triplog.record.repository.RecordTagRepository;
 import com.triplog.trip.TripFinder;
 import com.triplog.trip.TripParticipantFinder;
+import com.triplog.trip.TripService;
 import com.triplog.trip.domain.Trip;
 import com.triplog.trip.domain.TripParticipant;
 import com.triplog.user.UserFinder;
@@ -38,6 +39,7 @@ public class RecordService {
     private final TripFinder tripFinder;
     private final RecordFinder recordFinder;
     private final TripParticipantFinder tripParticipantFinder;
+    private final TripService tripService;
 
     public RecordFindAllByPlaceResponse getRecordsByPlace(String nickname, Long kakaoPlaceId) {
 
@@ -97,6 +99,7 @@ public class RecordService {
             recordImageRepository.save(recordImage);
         }
         recordRepository.save(record);
+        tripService.updateTripDate(record.getTrip());
     }
 
     @Transactional
@@ -108,6 +111,8 @@ public class RecordService {
                 recordUpdateDto.date(),
                 recordUpdateDto.isPublic()
         );
+        tripService.updateTripDate(record.getTrip());
+
         recordTagRepository.deleteAllByRecord(record);
         List<String> newTags = recordUpdateDto.tags();
         if (newTags != null) {
@@ -136,9 +141,11 @@ public class RecordService {
     @Transactional
     public void deleteRecord(Long recordId) {
         Record record=recordFinder.findByRecordId(recordId);
+        Trip trip = record.getTrip();
         recordImageRepository.deleteAllByRecord(record);
         recordTagRepository.deleteAllByRecord(record);
         recordRepository.delete(record);
+        tripService.updateTripDate(trip);
     }
 
     public RecordFindAllByLocationResponse getRecordsByLocation(String nickname,

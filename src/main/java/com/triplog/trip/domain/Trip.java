@@ -43,4 +43,9 @@ public class Trip extends BaseEntity {
         this.memo = memo;
         this.isPublic = isPublic;
     }
+
+    public void updateDate(LocalDate startDate, LocalDate endDate) {
+        this.startDate = startDate;
+        this.endDate = endDate;
+    }
 }
