@@ -34,8 +34,6 @@ public class TripService {
                 .title(request.title())
                 .memo(request.memo())
                 .isPublic(request.isPublic())
-                .startDate(request.startDate())
-                .endDate(request.endDate())
                 .user(user)
                 .build();
 
@@ -178,9 +176,7 @@ public class TripService {
 
         trip.update(request.title(),
                 request.memo(),
-                request.isPublic(),
-                request.startDate(),
-                request.endDate());
+                request.isPublic());
 
         tripTagRepository.deleteAllByTrip(trip);
         List<String> newTags = request.tags();
