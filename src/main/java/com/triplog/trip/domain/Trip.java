@@ -38,10 +38,13 @@ public class Trip extends BaseEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
-    public void update(String title, String memo, boolean isPublic, LocalDate startDate, LocalDate endDate) {
+    public void update(String title, String memo, boolean isPublic) {
         this.title = title;
         this.memo = memo;
         this.isPublic = isPublic;
+    }
+
+    public void updateDate(LocalDate startDate, LocalDate endDate) {
         this.startDate = startDate;
         this.endDate = endDate;
     }

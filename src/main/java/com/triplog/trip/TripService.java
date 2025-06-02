@@ -2,7 +2,9 @@ package com.triplog.trip;
 
 import com.triplog.common.exception.CustomException;
 import com.triplog.common.exception.ErrorCode;
+import com.triplog.record.domain.Record;
 import com.triplog.record.repository.RecordImageRepository;
+import com.triplog.record.repository.RecordRepository;
 import com.triplog.trip.domain.*;
 import com.triplog.trip.dto.*;
 import com.triplog.trip.repository.*;
@@ -12,6 +14,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
 import java.util.List;
 
 @Slf4j
@@ -25,6 +29,7 @@ public class TripService {
     private final UserFinder userFinder;
     private final TripFinder tripFinder;
     private final RecordImageRepository recordImageRepository;
+    private final RecordRepository recordRepository;
 
     @Transactional
     public TripCreateResponse createTrip(TripCreateRequest request, String username) {
@@ -34,8 +39,6 @@ public class TripService {
                 .title(request.title())
                 .memo(request.memo())
                 .isPublic(request.isPublic())
-                .startDate(request.startDate())
-                .endDate(request.endDate())
                 .user(user)
                 .build();
 
@@ -178,9 +181,7 @@ public class TripService {
 
         trip.update(request.title(),
                 request.memo(),
-                request.isPublic(),
-                request.startDate(),
-                request.endDate());
+                request.isPublic());
 
         tripTagRepository.deleteAllByTrip(trip);
         List<String> newTags = request.tags();
@@ -210,5 +211,27 @@ public class TripService {
         tripParticipantRepository.deleteAll(participants);
         tripTagRepository.deleteAllByTrip(trip);
         tripRepository.delete(trip);
+    }
+
+    @Transactional
+    public void updateTripDate(Trip trip) {
+        List<Record> records = recordRepository.findAllByTrip(trip);
+
+        if (records.isEmpty()) {
+            trip.updateDate(null, null);
+            return;
+        }
+
+        LocalDate start = records.stream()
+                .map(Record::getDate)
+                .min(LocalDate::compareTo)
+                .orElse(null);
+
+        LocalDate end = records.stream()
+                .map(Record::getDate)
+                .max(LocalDate::compareTo)
+                .orElse(null);
+
+        trip.updateDate(start, end);
     }
 }
