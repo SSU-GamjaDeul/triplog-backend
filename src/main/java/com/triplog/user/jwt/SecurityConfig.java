@@ -42,7 +42,8 @@ public class SecurityConfig {
         config.setAllowedOrigins(List.of(
                 "http://localhost:3000",
                 "https://triplog.store",
-                "https://triplog-bucket.s3.ap-northeast-2.amazonaws.com"
+                "https://triplog-bucket.s3.ap-northeast-2.amazonaws.com",
+                "https://triplog.app.gyk.kr"
         ));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE","OPTIONS", "PATCH"));
         config.setAllowedHeaders(List.of("*"));
